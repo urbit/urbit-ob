@@ -1,0 +1,20 @@
+{
+  "name": "urbit-nom",
+  "version": "1.0.0",
+  "description": "utilities to convert urbit ship names back and forth between @p and @ud",
+  "main": "nom.js",
+  "scripts": {
+    "test": "node test/main.js"
+  },
+  "keywords": [
+    "urbit"
+  ],
+  "author": "~poldec-tonteg",
+  "license": "ISC",
+  "devDependencies": {
+    "test": "^0.6.0"
+  },
+  "dependencies": {
+    "bignum": "^0.12.5"
+  }
+}
