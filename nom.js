@@ -61,11 +61,11 @@ var wordtonum = function(word) {
 
 var feen = function(pyn) {
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
-    return 0x10000 + nice(pyn - 0x10000);
+    return 0x10000 + fice(pyn - 0x10000);
   }
-  if (pyn >= 0x100000000 && pyn <= bn("18446744073709552000")) {
+  if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
     var lo = pyn & 0xFFFFFFFF;
-    var hi = pyn & bn("18446744073709552000");
+    var hi = pyn & 0xffffffff00000000;
     return hi | feen(lo);
   }
   return pyn;
@@ -85,13 +85,16 @@ var fend = function(cry) {
 
 var fice = function(nor) {
   var sel = [
-    nor % 0xFFFF,
-    nor / 0x10000
+    //nor % 0xFFFF,
+    nor % 65535,
+    //nor / 0x10000
+    nor / 65535
   ];
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 4; i++) {
     sel = rynd(i, sel[0], sel[1]);
   };
-  return 0xFFFF * sel[0] + sel[1];
+
+  return 65535 * sel[0] + sel[1];
 };
 
 var teil = function(vip) {
@@ -122,33 +125,38 @@ var rund = function(n, l, r) {
   if (n % 2 == 0) {
     m = 0xFFFF;
   };
-  var h = muk(raku[n], r);
+  var h = muk(raku[n], 2, r);
   res[1] = (m + 1 - (h % m)) % m;
   return res
 };
 
-var muk = function(syd, key) {
-  key = bn(key);
+var muk = function(syd, len, key) {
+  //key = bn(key);
   var lo = key & 0xFF;
-  var hi = (key & 0xFF00) / 0x100;
-  return murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd);
+  var hi = (key & 0xFF00) / 256;
+  var res = murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd);
+  return res;
 };
 
 var murmur3 = function(data, seed) {
-  seed = seed ? seed : 0;
-  seed = bn(seed);
+  console.log('murmur3 data', data);
+  console.log('murmur3 seed', seed);
+  if (!seed) {
+    seed = 0;
+  }
   var c1 = 3432918353;
   var c2 = 461845907;
+
   var length = data.length;
   var h1 = seed;
   var k1;
   var roundedEnd = length & 0xFFFFFFFC;
   // maybe the for loops got borked in lua conversion
-  for (var i = 0; i < roundedEnd - 1; i += 4) {
-    var x = data.charAt(i + 3) ? data.charAt(i + 3) : 0;
-    k1 = bn(data.charAt(i) & 0xFF)
-      | ((data.charAt(i + 1) & 0xFF) << 8)
-      | ((data.charAt(i + 2) & 0xFF) << 16)
+  for (var i = 0; i < roundedEnd; i += 4) {
+    var x = data.charCodeAt(i + 3) ? data.charCodeAt(i + 3) : 0;
+    k1 = bn(data.charCodeAt(i) & 0xFF)
+      | ((data.charCodeAt(i + 1) & 0xFF) << 8)
+      | ((data.charCodeAt(i + 2) & 0xFF) << 16)
       | (x << 24);
     k1 = k1 * c1;
     k1 = (k1 << 15) | ((k1 & 0xFFFFFFFF) >> 17);
@@ -157,16 +165,17 @@ var murmur3 = function(data, seed) {
     h1 = (h1 << 13) | ((h1 & 0xFFFFFFFF) >> 19);
     h1 = h1 * 5 + 3864292196;
   };
+
   k1 = 0;
-  var val = length & 3;
+  var val = length & 0x03;
   if (val == 3) {
-    k1 = bn(data.charAt(roundedEnd + 2) & 0xFF) << 16;
+    k1 = (data.charCodeAt(roundedEnd + 2) & 0xFF) << 16;
   };
   if (val == 3 || val == 2) {
-    k1 = k1 | (bn(data.charAt(roundedEnd + 1) & 0xFF) << 8);
+    k1 = k1 | (data.charCodeAt(roundedEnd + 1) & 0xFF) << 8;
   };
   if (val == 3 || val == 2 || val == 1) {
-    k1 = k1 | (data.charAt(roundedEnd) & 0xFF);
+    k1 = k1 | (data.charCodeAt(roundedEnd) & 0xFF);
     k1 = k1 * c1;
     k1 = (k1 << 15) | ((k1 & 0xFFFFFFFF) >> 17);
     k1 = k1 * c2;
@@ -183,7 +192,7 @@ var murmur3 = function(data, seed) {
 
 /*
  * Public methods
- *  -- nume ( ship name )
+ *  -- toAddress ( ship name )
  *  --   => address number
  *  -- nome ( address number )
  *  --   => ship name
@@ -195,7 +204,7 @@ var murmur3 = function(data, seed) {
  *
  */
 
-var nume = function(name) {
+var toAddress = function(name) {
     var nome = name.replace(/~|-/g, '');
     var lent = nome.length;
 
@@ -238,57 +247,65 @@ var nume = function(name) {
 
 }
 
-var nome = function(addr) {
-  addr = bn(addr);
-  var bytes = addr.bitLength();
-  //console.log('bytes', bytes);
-  // make sure byte-length is even
-  if (bytes > 1 && bytes % 2 == 1) {
-    bytes = bytes + 1;
-  };
-  console.log('bytes', bytes);
-  var name = "";
-  //unscramble planet/moon
-  //wont this catch galaxies?
-  if (bytes >= 4 && bytes <= 8) {
-    console.log('planet or moon');
-    var padr = (addr % 0x100000000);
-    console.log('padr', padr);
-    var nadr = feen(padr);
-    console.log('padr', nadr);
-    addr = addr - padr + nadr;
-    console.log('addr', addr);
+var toGalaxyName = function(galaxy) {
+  return toShipName(galaxy, 1);
+};
+
+var toStarName = function(star) {
+  return toShipName(star, 2);
+};
+
+// better ES6 better way to do this
+var toPlanetName = function(scrambled, scramble) {
+  if (!scramble) {
+    scramble = true;
   }
-  // for loops 
-  for (var i = 0; i < bytes - 1; i++) {
-    //console.log('loop triggered');
-    console.log('loop iter', i);
-    var byt = bn((addr % 0x100)).toNumber();
-    console.log('byt', byt);
+  return toShipName(scrambled, 4, scramble);
+};
+
+var toShipName = function(addr, minBytes, scramble) {
+  if (!scramble) {
+    scramble = true;
+  };
+
+  if (!minBytes) {
+    if (addr < 0x100) {
+      minBytes = 1;
+    } else if (addr < 0x10000) {
+      minBytes = 2;
+    } else {
+      minBytes = 4;
+    }
+  }
+
+  if (minBytes == 4 && scramble) {
+    addr = feen(addr);
+  };
+
+  var name = ""
+  for (var i = 0; i < minBytes; i ++) {
+    var byt = addr % 256;
     var syllable = "";
     if (i % 2 == 1) {
       syllable = getprefix(byt);
     } else {
       syllable = getsuffix(byt);
     }
-    if (i > 0 && i % 2 == 0) {
-      name = "-" + name;
-    };
-    if (i > 0 && i % 8 == 0) {
-      name = "-" + name;
-    };
-    console.log('syllable', syllable);
     name = syllable + name;
-    addr = addr / 0x100;
+    addr = addr / 256;
   };
   return name;
 };
 
 module.exports = {
-  nume: nume,
-  nome: nome,
+  toAddress: toAddress,
+  toGalaxyName: toGalaxyName,
+  toStarName: toStarName,
+  toPlanetName: toPlanetName,
   _wordtonum: wordtonum,
   _getsuffix: getsuffix,
+  _muk: muk,
+  _feen: feen,
   _fend: fend,
   _teil: teil
 };
