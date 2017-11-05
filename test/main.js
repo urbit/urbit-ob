@@ -12,9 +12,9 @@ exports['test that stops execution'] = function(assert) {
   assert.equal(nom._wordtonum('samzod'), 1024, 'test converting two syllable word to num');
   assert.equal((typeof nom._wordtonum('sambinzod')), 'undefined', 'test rejecting three syllable word to num');
 
-  assert.equal(nom.toAddress('~lex'), 200, 'convert ship name ~lex to number 200');
-  assert.equal(nom.toAddress('~binzod'), 512, 'convert ship name ~binzod to number 512');
-  assert.equal(nom.toAddress('~poldec-tonteg'), 9896704, 'convert ship name ~poldec-tonteg to number 9896704');
+  assert.equal(nom.toAddress('lex'), 200, 'convert ship name ~lex to number 200');
+  assert.equal(nom.toAddress('binzod'), 512, 'convert ship name ~binzod to number 512');
+  assert.equal(nom.toAddress('poldec-tonteg'), 9896704, 'convert ship name ~poldec-tonteg to number 9896704');
   assert.equal(nom._getsuffix(200), 'lex', 'gets correct suffix');
   assert.equal(nom.toGalaxyName(200), 'lex', 'convert ship num 200 to ~lex');
   assert.equal(nom.toStarName(512), 'binzod', 'convert ship num 512 to ~binzod');
