@@ -59,41 +59,33 @@ var wordtonum = function(word) {
 };
 
 var feen = function(pyn) {
-  console.log('feen input', pyn);
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
     var tmp = fice(pyn - 0x10000) + 0x10000;
-    console.log('output of feen', tmp);
     return tmp;
   }
   if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
     var lo = pyn & 0xFFFFFFFF;
     var hi = pyn & 0xffffffff00000000;
-    console.log('feen recursion');
     return bn(hi).or(feen(lo));
   }
-  console.log('output of feen', pyn);
   return pyn;
 }
 
 var fend = function(cry) {
   if (cry >= 0x10000 && cry <= 0xFFFFFFFF) {
     var o = bn(teil(cry - 0x10000)).add(0x10000);
-    console.log('output of fend block 1', o);
     return o;
   };
   if (cry >= 0x100000000 && cry <= bn(0xffffffffffffffff)) {
     var lo = cry & 0xFFFFFFFF;
     var hi = cry & 0xffffffff00000000;
     var o = hi | fend(lo);
-    console.log('output of fend block 2', o);
     return o;
   };
-  console.log('output of fend block 3', cry);
   return cry;
 };
 
 var fice = function(nor) {
-  console.log('input to fice', nor);
   var sel = [
     nor % 65535,
     nor / 65535
@@ -103,19 +95,16 @@ var fice = function(nor) {
   };
 
   var res = 65535 * sel[0] + sel[1];
-  console.log('output of fice', res);
   return res;
 };
 
 var teil = function(vip) {
-  console.log('input to teil', vip);
   var sel = [
     vip % 65535,
     vip / 65535
     //vip % 0xFFFF,
     //vip / 0x10000
   ];
-  console.log('sel', sel);
   // maybe the for loops got borked in lua conversion
   for (var i = 3; i > -1; i--) {
     sel = rund(i, sel[0], sel[1]);
@@ -125,14 +114,12 @@ var teil = function(vip) {
 };
 
 var rynd = function(n, l, r) {
-  //console.log('input to rynd', n, l, r);
   var res = [r, 0];
   var m = 0x10000;
   if (n % 2 == 0) {
     m = 0xFFFF;
   };
   res[1] = (bn(muk(raku[n], 2, r)).add(l)) % m;
-  console.log('output to rynd', res);
   return res;
 };
 
@@ -209,7 +196,7 @@ var murmur3 = function(data, seed) {
  * Public methods
  *  -- toAddress ( ship name )
  *  --   => address number
- *  -- nome ( address number )
+ *  -- to{Galaxy,Star,Planet}Ship ( address number )
  *  --   => ship name
  *  ####################### NOT YET IMPLEMENTED ##########################
  *  -- clan ( ship name or address number (int or bn) )
@@ -325,7 +312,6 @@ var toShipName = function(addr, minBytes, scramble) {
   var name = ""
   for (var i = 0; i < minBytes; i ++) {
     var byt = Math.floor(addr % 256);
-    console.log('byt', byt);
     var syllable = "";
     if (i % 2 == 1) {
       syllable = getprefix(byt);
