@@ -4,7 +4,8 @@
  * Utility methods
  */
 
-var bn = require('bignum');
+//var bn = require('bignum');
+var bnjs = require('bn.js');
 
 var raku = [
   3077398253,
@@ -59,33 +60,41 @@ var wordtonum = function(word) {
 };
 
 var feen = function(pyn) {
+  console.log('feen input', pyn);
+  var f = 4294967295
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
     var tmp = fice(pyn - 0x10000) + 0x10000;
+    console.log('output of feen', tmp);
+    console.log('output of feen', tmp.toString());
     return tmp;
   }
   if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
-    var lo = pyn & 0xFFFFFFFF;
-    var hi = pyn & 0xffffffff00000000;
-    return bn(hi).or(feen(lo));
+    var pynBn = new bnjs(pyn);
+    var lo = pynBn.and(f);
+    var hi = pynBn.and('18446744069414584000');
+    return hi.or(feen(lo)).toNumber();
   }
   return pyn;
 }
 
 var fend = function(cry) {
   if (cry >= 0x10000 && cry <= 0xFFFFFFFF) {
-    var o = bn(teil(cry - 0x10000)).add(0x10000);
-    return o;
+    var res = new bnjs(teil(cry - 0x10000));
+    res = res.add(new bnjs(65536)).toNumber();
+    return res;
   };
   if (cry >= 0x100000000 && cry <= bn(0xffffffffffffffff)) {
-    var lo = cry & 0xFFFFFFFF;
-    var hi = cry & 0xffffffff00000000;
-    var o = hi | fend(lo);
-    return o;
+    var cryBn = new bnjs(cry);
+    var lo = cryBn.and(new bnjs('0xFFFFFFFF'));
+    var hi = cryBn.and(new bnjs('0xffffffff00000000'));
+    var res = hi.or(fend(lo));
+    return res.toNumber();
   };
   return cry;
 };
 
 var fice = function(nor) {
+  console.log('fice input', nor);
   var sel = [
     nor % 65535,
     nor / 65535
@@ -94,7 +103,9 @@ var fice = function(nor) {
     sel = rynd(i, sel[0], sel[1]);
   };
 
+  console.log('sel', sel);
   var res = 65535 * sel[0] + sel[1];
+  console.log('output of fice', res);
   return res;
 };
 
@@ -109,28 +120,39 @@ var teil = function(vip) {
   for (var i = 3; i > -1; i--) {
     sel = rund(i, sel[0], sel[1]);
   };
-  var res = bn(bn(0xFFFF).mul(sel[0])).add(sel[1]);
-  return res;
+  //var res = bn(bn(0xFFFF).mul(sel[0])).add(sel[1]);
+  var r1 = new bnjs(65535);
+  var res = r1.mul(new bnjs(sel[0])).add(new bnjs(sel[1]));
+  return res.toNumber();
 };
 
 var rynd = function(n, l, r) {
+  l = Math.floor(l);
+  console.log('rynd input', n, l, r);
   var res = [r, 0];
-  var m = 0x10000;
+  var m = new bnjs(65536);
   if (n % 2 == 0) {
-    m = 0xFFFF;
+    m = new bnjs(65535);
   };
-  res[1] = (bn(muk(raku[n], 2, r)).add(l)) % m;
-  return res;
+  //res[1] = (bn(muk(raku[n], 2, r)).add(l)) % m;
+  var r1 = new bnjs(muk(raku[n], 2, r));
+  var r2 = r1.add(new bnjs(l)).mod(m);
+  res[1] = r2.toNumber();
+  console.log('output of rynd', res)
+  return res
 };
 
 var rund = function(n, l, r) {
+  l = Math.floor(l);
   var res = [r, 0];
-  var m = 65536;
+  var m = new bnjs(65536);
   if (n % 2 == 0) {
-    m = 65535;
+    m = new bnjs(65535);
   };
-  var h = muk(raku[n], 2, r);
-  res[1] = bn(bn((m + l)).sub(bn(h).mod(m))).mod(m);
+  var h = new bnjs(muk(raku[n], 2, r));
+  var r1 = new bnjs(m + l);
+  var r2 = r1.sub(h.mod(m)).mod(m).toString();
+  res[1] = r2;
   return res
 };
 
@@ -139,6 +161,7 @@ var muk = function(syd, len, key) {
   var lo = key & 0xFF;
   var hi = (key & 0xFF00) / 256;
   var res = murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd);
+  console.log('muk output', res);
   return res;
 };
 
@@ -146,11 +169,13 @@ var murmur3 = function(data, seed) {
   if (!seed) {
     seed = 0;
   }
-  var c1 = 3432918353;
-  var c2 = 461845907;
+  var c1 = new bnjs(3432918353);
+  var c2 = new bnjs(461845907);
 
-  var length = data.length;
-  var h1 = seed;
+  var f = 4294967295
+
+  var length = new bnjs(data.length);
+  var h1 = new bnjs(seed);
   var k1;
   var roundedEnd = length & 0xFFFFFFFC;
   // this will likely need to be redone with bignum
@@ -178,18 +203,20 @@ var murmur3 = function(data, seed) {
   };
   if (val == 3 || val == 2 || val == 1) {
     k1 = k1 | (data.charCodeAt(roundedEnd) & 0xFF);
-    k1 = k1 * c1;
-    k1 = bn(k1).shiftLeft(15).or(bn(bn(k1).and(0xffffffff)).shiftRight(17))
-    k1 = bn(k1).mul(c2);
-    h1 = bn(h1).xor(k1);
+    k1 = new bnjs(k1 * c1);
+    var k2 = new bnjs(k1.and(new bnjs(f)).shrn(17));
+    k1 = k1.shln(15).or(k2);
+    k1 = k1.mul(c2);
+    h1 = h1.xor(k1);
   };
-  h1 = bn(h1).xor(length);
-  h1 = bn(h1).xor(bn(bn(h1).and(0xFFFFFFFF)).shiftRight(16));
-  h1 = bn(h1).mul(2246822507);
-  h1 = bn(h1).xor(bn(bn(h1).and(0xFFFFFFFF)).shiftRight(13));
-  h1 = bn(h1).mul(3266489909);
-  h1 = bn(h1).xor(bn(bn(h1).and(0xFFFFFFFF)).shiftRight(16));
-  return bn(h1).and(0xFFFFFFFF);
+  h1 = h1.xor(length);
+  console.log('pre xor lenth', h1.toString());
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16));
+  h1 = h1.mul(new bnjs(2246822507));
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(13));
+  h1 = h1.mul(new bnjs(3266489909));
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16));
+  return h1.and(new bnjs(f)).toNumber();
 };
 
 /*
