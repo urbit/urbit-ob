@@ -1,6 +1,6 @@
 //var assert = require('assert');
 var nom = require('../nom');
-var bn = require('bignum');
+//var bn = require('bignum');
 
 exports['test that stops execution'] = function(assert) {
   assert.equal(nom._feen(0x10100), 0x63b30e1c, 'test feen');
