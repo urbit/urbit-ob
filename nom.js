@@ -60,12 +60,9 @@ var wordtonum = function(word) {
 };
 
 var feen = function(pyn) {
-  console.log('feen input', pyn);
   var f = 4294967295
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
     var tmp = fice(pyn - 0x10000) + 0x10000;
-    console.log('output of feen', tmp);
-    console.log('output of feen', tmp.toString());
     return tmp;
   }
   if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
@@ -94,7 +91,6 @@ var fend = function(cry) {
 };
 
 var fice = function(nor) {
-  console.log('fice input', nor);
   var sel = [
     nor % 65535,
     nor / 65535
@@ -103,9 +99,7 @@ var fice = function(nor) {
     sel = rynd(i, sel[0], sel[1]);
   };
 
-  console.log('sel', sel);
   var res = 65535 * sel[0] + sel[1];
-  console.log('output of fice', res);
   return res;
 };
 
@@ -128,7 +122,6 @@ var teil = function(vip) {
 
 var rynd = function(n, l, r) {
   l = Math.floor(l);
-  console.log('rynd input', n, l, r);
   var res = [r, 0];
   var m = new bnjs(65536);
   if (n % 2 == 0) {
@@ -138,7 +131,6 @@ var rynd = function(n, l, r) {
   var r1 = new bnjs(muk(raku[n], 2, r));
   var r2 = r1.add(new bnjs(l)).mod(m);
   res[1] = r2.toNumber();
-  console.log('output of rynd', res)
   return res
 };
 
@@ -161,7 +153,6 @@ var muk = function(syd, len, key) {
   var lo = key & 0xFF;
   var hi = (key & 0xFF00) / 256;
   var res = murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd);
-  console.log('muk output', res);
   return res;
 };
 
@@ -210,7 +201,6 @@ var murmur3 = function(data, seed) {
     h1 = h1.xor(k1);
   };
   h1 = h1.xor(length);
-  console.log('pre xor lenth', h1.toString());
   h1 = h1.xor(h1.and(new bnjs(f)).shrn(16));
   h1 = h1.mul(new bnjs(2246822507));
   h1 = h1.xor(h1.and(new bnjs(f)).shrn(13));
