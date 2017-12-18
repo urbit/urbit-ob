@@ -237,6 +237,8 @@ var toAddress = function(name, unscramble) {
   if (!unscramble) {
     unscramble = true;
   };
+  // our method of planet discovery needs hep
+  name = name.replace(/~/g, '');
   if (name.length == 3) {
     return getsuffixindex(name);
   } else if (name.length == 6) {
