@@ -1,5 +1,5 @@
 //var assert = require('assert');
-var nom = require('../nom');
+var nom = require('../index.js');
 //var bn = require('bignum');
 
 exports['test that stops execution'] = function(assert) {
