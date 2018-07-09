@@ -19,6 +19,12 @@ exports['test that stops execution'] = function(assert) {
   assert.equal(nom.toGalaxyName(200), 'lex', 'convert ship num 200 to ~lex');
   assert.equal(nom.toStarName(512), 'binzod', 'convert ship num 512 to ~binzod');
   assert.equal(nom.toPlanetName(9896704), 'poldec-tonteg', 'convert number 9896704 to ship name ~poldec-tonteg');
+  assert.equal(nom.isShip('poldec-tonteg'), true, 'identifies poldec-tonteg as a ship');
+  assert.equal(nom.isShip('aaa'), false, 'identifies aaa as not ship');
+  assert.equal(nom.isShip("aaaaaa"), false, 'invalidates star');
+  assert.equal(nom.isShip("//////"), false, 'invalidates star');
+  assert.equal(nom.isShip("////////////"), false, 'invalidates planet');
+  assert.equal(nom.isShip("//////-//////"), false, 'invalidates planet');
 }
 
 if (module == require.main) require('test').run(exports);

@@ -250,7 +250,8 @@ var toAddress = function(name, unscramble) {
 };
 
 var isAddress = function(name) {
-  return typeof toAddress(name) != 'undefined';
+  var r = toAddress(name);
+  return (typeof r != 'undefined' && r === r)
 }
 
 
