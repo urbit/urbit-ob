@@ -8,9 +8,9 @@ exports['test that stops execution'] = function(assert) {
   assert.equal(nom._muk(0, 2, 0x101), 0x42081a9b, 'test muk 1');
   assert.equal(nom._muk(0, 2, 0x201), 0x64c7667e, 'test muk 2');
 
-  assert.equal(nom._wordtonum('zod'), 0, 'test converting one syllable word to num');
-  assert.equal(nom._wordtonum('samzod'), 1024, 'test converting two syllable word to num');
-  assert.equal((typeof nom._wordtonum('sambinzod')), 'undefined', 'test rejecting three syllable word to num');
+  // assert.equal(nom._wordtonum('zod'), 0, 'test converting one syllable word to num');
+  // assert.equal(nom._wordtonum('samzod'), 1024, 'test converting two syllable word to num');
+  // assert.equal((typeof nom._wordtonum('sambinzod')), 'undefined', 'test rejecting three syllable word to num');
 
   assert.equal(nom.toAddress('lex'), 200, 'convert ship name ~lex to number 200');
   assert.equal(nom.toAddress('binzod'), 512, 'convert ship name ~binzod to number 512');
@@ -19,12 +19,13 @@ exports['test that stops execution'] = function(assert) {
   assert.equal(nom.toGalaxyName(200), 'lex', 'convert ship num 200 to ~lex');
   assert.equal(nom.toStarName(512), 'binzod', 'convert ship num 512 to ~binzod');
   assert.equal(nom.toPlanetName(9896704), 'poldec-tonteg', 'convert number 9896704 to ship name ~poldec-tonteg');
-  assert.equal(nom.isShip('poldec-tonteg'), true, 'identifies poldec-tonteg as a ship');
-  assert.equal(nom.isShip('aaa'), false, 'identifies aaa as not ship');
-  assert.equal(nom.isShip("aaaaaa"), false, 'invalidates star');
-  assert.equal(nom.isShip("//////"), false, 'invalidates star');
-  assert.equal(nom.isShip("////////////"), false, 'invalidates planet');
-  assert.equal(nom.isShip("//////-//////"), false, 'invalidates planet');
+  assert.equal(nom.isValidName('poldec-tonteg'), true, 'identifies poldec-tonteg as a ship');
+  assert.equal(nom.isValidName('zod'), true, 'identifies zod as a ship');
+  assert.equal(nom.isValidName('aaa'), false, 'identifies aaa as not ship');
+  assert.equal(nom.isValidName("aaaaaa"), false, 'invalidates star');
+  assert.equal(nom.isValidName("//////"), false, 'invalidates star');
+  assert.equal(nom.isValidName("////////////"), false, 'invalidates planet');
+  assert.equal(nom.isValidName("//////-//////"), false, 'invalidates planet');
 }
 
 if (module == require.main) require('test').run(exports);
