@@ -1,213 +1,287 @@
-'use strict';
+'use strict'
 
 /*
  * Utility methods
  */
 
-//var bn = require('bignum');
-var bnjs = require('bn.js');
+// var bn = require('bignum')
+const bnjs = require('bn.js')
+const { reduce, isUndefined, isString, every, map } = require('lodash')
 
-var raku = [
+const raku = [
   3077398253,
   3995603712,
   2243735041,
-  1261992695
-];
+  1261992695,
+]
 
-var prefix = "dozmarbinwansamlitsighidfidlissogdirwacsabwissibrigsoldopmodfoglidhopdardorlorhodfolrintogsilmirholpaslacrovlivdalsatlibtabhanticpidtorbolfosdotlosdilforpilramtirwintadbicdifrocwidbisdasmidloprilnardapmolsanlocnovsitnidtipsicropwitnatpanminritpodmottamtolsavposnapnopsomfinfonbanmorworsipronnorbotwicsocwatdolmagpicdavbidbaltimtasmalligsivtagpadsaldivdactansidfabtarmonranniswolmispallasdismaprabtobrollatlonnodnavfignomnibpagsopralbilhaddocridmocpacravripfaltodtiltinhapmicfanpattaclabmogsimsonpinlomrictapfirhasbosbatpochactidhavsaplindibhosdabbitbarracparloddosbortochilmactomdigfilfasmithobharmighinradmashalraglagfadtopmophabnilnosmilfopfamdatnoldinhatnacrisfotribhocnimlarfitwalrapsarnalmoslandondanladdovrivbacpollaptalpitnambonrostonfodponsovnocsorlavmatmipfip"
+const pre = `
+dozmarbinwansamlitsighidfidlissogdirwacsabwissib\
+rigsoldopmodfoglidhopdardorlorhodfolrintogsilmir\
+holpaslacrovlivdalsatlibtabhanticpidtorbolfosdot\
+losdilforpilramtirwintadbicdifrocwidbisdasmidlop\
+rilnardapmolsanlocnovsitnidtipsicropwitnatpanmin\
+ritpodmottamtolsavposnapnopsomfinfonbanmorworsip\
+ronnorbotwicsocwatdolmagpicdavbidbaltimtasmallig\
+sivtagpadsaldivdactansidfabtarmonranniswolmispal\
+lasdismaprabtobrollatlonnodnavfignomnibpagsopral\
+bilhaddocridmocpacravripfaltodtiltinhapmicfanpat\
+taclabmogsimsonpinlomrictapfirhasbosbatpochactid\
+havsaplindibhosdabbitbarracparloddosbortochilmac\
+tomdigfilfasmithobharmighinradmashalraglagfadtop\
+mophabnilnosmilfopfamdatnoldinhatnacrisfotribhoc\
+nimlarfitwalrapsarnalmoslandondanladdovrivbacpol\
+laptalpitnambonrostonfodponsovnocsorlavmatmipfip\
+`
 
-var suffix = "zodnecbudwessevpersutletfulpensytdurwepserwylsunrypsyxdyrnuphebpeglupdepdysputlughecryttyvsydnexlunmeplutseppesdelsulpedtemledtulmetwenbynhexfebpyldulhetmevruttylwydtepbesdexsefwycburderneppurrysrebdennutsubpetrulsynregtydsupsemwynrecmegnetsecmulnymtevwebsummutnyxrextebfushepbenmuswyxsymselrucdecwexsyrwetdylmynmesdetbetbeltuxtugmyrpelsyptermebsetdutdegtexsurfeltudnuxruxrenwytnubmedlytdusnebrumtynseglyxpunresredfunrevrefmectedrusbexlebduxrynnumpyxrygryxfeptyrtustyclegnemfermertenlusnussyltecmexpubrymtucfyllepdebbermughuttunbylsudpemdevlurdefbusbeprunmelpexdytbyttyplevmylwedducfurfexnulluclennerlexrupnedlecrydlydfenwelnydhusrelrudneshesfetdesretdunlernyrsebhulrylludremlysfynwerrycsugnysnyllyndyndemluxfedsedbecmunlyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes"
+const suf = `
+zodnecbudwessevpersutletfulpensytdurwepserwylsun\
+rypsyxdyrnuphebpeglupdepdysputlughecryttyvsydnex\
+lunmeplutseppesdelsulpedtemledtulmetwenbynhexfeb\
+pyldulhetmevruttylwydtepbesdexsefwycburderneppur\
+rysrebdennutsubpetrulsynregtydsupsemwynrecmegnet\
+secmulnymtevwebsummutnyxrextebfushepbenmuswyxsym\
+selrucdecwexsyrwetdylmynmesdetbetbeltuxtugmyrpel\
+syptermebsetdutdegtexsurfeltudnuxruxrenwytnubmed\
+lytdusnebrumtynseglyxpunresredfunrevrefmectedrus\
+bexlebduxrynnumpyxrygryxfeptyrtustyclegnemfermer\
+tenlusnussyltecmexpubrymtucfyllepdebbermughuttun\
+bylsudpemdevlurdefbusbeprunmelpexdytbyttyplevmyl\
+wedducfurfexnulluclennerlexrupnedlecrydlydfenwel\
+nydhusrelrudneshesfetdesretdunlernyrsebhulryllud\
+remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun\
+lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
+`
 
-var getsyllable = function(s, i) {
-  return s.slice(i * 3, (i * 3) + 3);
-};
+// groups suffixes into array of syllables
+const suffixes = suf.match(/.{1,3}/g)
 
-var getprefix = function(i) {
-  return getsyllable(prefix, i);
-};
+// groups prefixes into array of syllables
+const prefixes = pre.match(/.{1,3}/g)
 
-var getsuffix = function(i) {
-  return getsyllable(suffix, i);
-};
+// Get item at an index in array
+const getAt = (arr, index) => arr[index]
 
-var getsyllableindex = function(str, syl) {
-  var i = str.indexOf(syl);
-  if (i < 0) {
-    return;
-  };
-  return i / 3
-};
+// Gets the length of an array
+const len = arr => arr.length
 
-var getprefixindex = function(syl) {
-  return getsyllableindex(prefix, syl);
-};
-  
-var getsuffixindex = function(syl) {
-  return getsyllableindex(suffix, syl);
-};
+// gets the last index as an int from an array
+const lid = arr => arr.length - 1
 
-var wordtonum = function(word) {
-    if (word.length == 3) {
-      return 1 * getsuffixindex(word);
-    } else if (word.length == 6) {
-      var addr = getprefixindex(word.slice(0, 2));
-      addr = addr * 0x100;
-      addr = addr + getsuffixindex(word.slice(3, 5));
-      return addr;
-    } else {
-      return;
-    }
-};
+// wraps indexOf
+const indexOf = (arr, str) => arr.indexOf(str)
 
-var feen = function(pyn) {
-  var f = 4294967295
+// is a int odd?
+const isOdd = n => n % 2 !== 0
+
+// is a int even?
+const isEven = n => !isOdd(n)
+
+// Makes an array of length num populated with its indices
+const seq = num => Array.from(Array(num), (nada, i) => i)
+
+// Gets the prefix at an index
+const getPrefix = i => getAt(prefixes, i)
+
+// Gets the suffix at an index
+const getSuffix = i => getAt(suffixes, i)
+
+// Checks if a syllable exists in both suffixes and prefixes
+const doesExist = str => [...suffixes, ...prefixes].includes(str)
+
+// Checks if a suffix exists
+const doesSuffixExist = str => suffixes.includes(str)
+
+// Checks if a prefix exists
+const doesPrefixExist = str => prefixes.includes(str)
+
+// Gets the index of a prefix
+const getPrefixIndex = str => indexOf(prefixes, str)
+
+// Gets the index of a suffix
+const getSuffixIndex = str => indexOf(suffixes, str)
+
+// converts a binary string to a base-10 integer
+const bin2dec = str => parseInt(str, 2).toString(10)
+
+// converts a base-10 integer to a binary string
+const dec2bin = num => num.toString(2)
+
+// converts an @P syllable index to a binary string
+const syl2bin = index => dec2bin(index).padStart(8, '0')
+
+
+// const wordToNum = str => {
+//   if (len(str) === 3) return getSuffixIndex(str)
+//
+//   if (len(str) === 6) {
+//     const addr = getPrefixIndex(str.slice(0, 2))
+//     const hex = addr * 0x100
+//     const sum = hex + getSuffixIndex(str.slice(3, 5))
+//     return sum
+//   }
+//
+//   return
+// }
+
+
+
+const feen = pyn => {
+  const f = 4294967295
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
-    var tmp = fice(pyn - 0x10000) + 0x10000;
-    return tmp;
+    const tmp = fice(pyn - 0x10000) + 0x10000
+    return tmp
   }
   if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
-    var pynBn = new bnjs(pyn);
-    var lo = pynBn.and(f);
-    var hi = pynBn.and('18446744069414584000');
-    return hi.or(feen(lo)).toNumber();
+    const pynBn = new bnjs(pyn)
+    const lo = pynBn.and(f)
+    const hi = pynBn.and('18446744069414584000')
+    return hi.or(feen(lo)).toNumber()
   }
-  return pyn;
+  return pyn
 }
 
-var fend = function(cry) {
-  if (cry >= 0x10000 && cry <= 0xFFFFFFFF) {
-    var res = new bnjs(teil(cry - 0x10000));
-    res = res.add(new bnjs(65536)).toNumber();
-    return res;
-  };
-  if (cry >= 0x100000000 && cry <= bn(0xffffffffffffffff)) {
-    var cryBn = new bnjs(cry);
-    var lo = cryBn.and(new bnjs('0xFFFFFFFF'));
-    var hi = cryBn.and(new bnjs('0xffffffff00000000'));
-    var res = hi.or(fend(lo));
-    return res.toNumber();
-  };
-  return cry;
-};
 
-var fice = function(nor) {
-  var sel = [
+const fend = cry => {
+  if (cry >= 0x10000 && cry <= 0xFFFFFFFF) {
+    const res = new bnjs(teil(cry - 0x10000))
+    const resNum = res.add(new bnjs(65536)).toNumber()
+    return resNum
+  }
+  if (cry >= 0x100000000 && cry <= bn(0xffffffffffffffff)) {
+    const cryBn = new bnjs(cry)
+    const lo = cryBn.and(new bnjs('0xFFFFFFFF'))
+    const hi = cryBn.and(new bnjs('0xffffffff00000000'))
+    const res = hi.or(fend(lo))
+    return res.toNumber()
+  }
+  return cry
+}
+
+
+
+const fice = nor => {
+  let sel = [
     nor % 65535,
     nor / 65535
-  ];
+  ]
   for (var i = 0; i < 4; i++) {
-    sel = rynd(i, sel[0], sel[1]);
-  };
+    sel = rynd(i, sel[0], sel[1])
+  }
 
-  var res = 65535 * sel[0] + sel[1];
-  return res;
-};
+  const res = 65535 * sel[0] + sel[1]
+  return res
+}
 
-var teil = function(vip) {
-  var sel = [
+
+const teil = vip => {
+  let sel = [
     vip % 65535,
     vip / 65535
     //vip % 0xFFFF,
     //vip / 0x10000
-  ];
+  ]
   // maybe the for loops got borked in lua conversion
   for (var i = 3; i > -1; i--) {
-    sel = rund(i, sel[0], sel[1]);
-  };
-  //var res = bn(bn(0xFFFF).mul(sel[0])).add(sel[1]);
-  var r1 = new bnjs(65535);
-  var res = r1.mul(new bnjs(sel[0])).add(new bnjs(sel[1]));
-  return res.toNumber();
-};
-
-var rynd = function(n, l, r) {
-  l = Math.floor(l);
-  var res = [r, 0];
-  var m = new bnjs(65536);
-  if (n % 2 == 0) {
-    m = new bnjs(65535);
-  };
-  //res[1] = (bn(muk(raku[n], 2, r)).add(l)) % m;
-  var r1 = new bnjs(muk(raku[n], 2, r));
-  var r2 = r1.add(new bnjs(l)).mod(m);
-  res[1] = r2.toNumber();
-  return res
-};
-
-var rund = function(n, l, r) {
-  l = Math.floor(l);
-  var res = [r, 0];
-  var m = new bnjs(65536);
-  if (n % 2 == 0) {
-    m = new bnjs(65535);
-  };
-  var h = new bnjs(muk(raku[n], 2, r));
-  var r1 = new bnjs(m + l);
-  var r2 = r1.sub(h.mod(m)).mod(m).toString();
-  res[1] = r2;
-  return res
-};
-
-var muk = function(syd, len, key) {
-  //key = bn(key);
-  var lo = key & 0xFF;
-  var hi = (key & 0xFF00) / 256;
-  var res = murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd);
-  return res;
-};
-
-var murmur3 = function(data, seed) {
-  if (!seed) {
-    seed = 0;
+    sel = rund(i, sel[0], sel[1])
   }
-  var c1 = new bnjs(3432918353);
-  var c2 = new bnjs(461845907);
+  //var res = bn(bn(0xFFFF).mul(sel[0])).add(sel[1])
+  const r1 = new bnjs(65535)
+  const res = r1.mul(new bnjs(sel[0])).add(new bnjs(sel[1]))
+  return res.toNumber()
+}
 
-  var f = 4294967295
 
-  var length = new bnjs(data.length);
-  var h1 = new bnjs(seed);
-  var k1;
-  var roundedEnd = length & 0xFFFFFFFC;
+const rynd = (n, l, r) => {
+  l = Math.floor(l)
+  const res = [r, 0]
+  const m = isEven(n)
+    ? new bnjs(65535)
+    : new bnjs(65536)
+
+  //res[1] = (bn(muk(raku[n], 2, r)).add(l)) % m
+  const r1 = new bnjs(muk(raku[n], 2, r))
+  const r2 = r1.add(new bnjs(l)).mod(m)
+  res[1] = r2.toNumber()
+  return res
+}
+
+
+const rund = (n, l, r) => {
+  l = Math.floor(l)
+  const res = [r, 0]
+  const m = isEven(n)
+    ? new bnjs(65535)
+    : new bnjs(65536)
+  const h = new bnjs(muk(raku[n], 2, r))
+  const r1 = new bnjs(m + l)
+  const r2 = r1.sub(h.mod(m)).mod(m).toString()
+  res[1] = r2
+  return res
+}
+
+
+const muk = (syd, len, key) => {
+  //key = bn(key)
+  const lo = key & 0xFF
+  const hi = (key & 0xFF00) / 256
+  const res = murmur3(String.fromCharCode(lo) + String.fromCharCode(hi), syd)
+  return res
+}
+
+
+const murmur3 = (data, seed) => {
+  if (!seed) seed = 0
+
+  const c1 = new bnjs(3432918353)
+  const c2 = new bnjs(461845907)
+
+  const f = 4294967295
+
+  const length = new bnjs(len(data))
+  let h1 = new bnjs(seed)
+  let k1
+  const roundedEnd = length & 0xFFFFFFFC
   // this will likely need to be redone with bignum
   for (var i = 0; i < roundedEnd; i += 4) {
-    var x = data.charCodeAt(i + 3) ? data.charCodeAt(i + 3) : 0;
+    var x = data.charCodeAt(i + 3) ? data.charCodeAt(i + 3) : 0
     k1 = bn(data.charCodeAt(i) & 0xFF)
       | ((data.charCodeAt(i + 1) & 0xFF) << 8)
       | ((data.charCodeAt(i + 2) & 0xFF) << 16)
-      | (x << 24);
-    k1 = k1 * c1;
-    k1 = (k1 << 15) | ((k1 & 0xFFFFFFFF) >> 17);
-    k1 = k1 * c2;
-    h1 = h1 ^ k1;
-    h1 = (h1 << 13) | ((h1 & 0xFFFFFFFF) >> 19);
-    h1 = h1 * 5 + 3864292196;
-  };
+      | (x << 24)
+    k1 = k1 * c1
+    k1 = (k1 << 15) | ((k1 & 0xFFFFFFFF) >> 17)
+    k1 = k1 * c2
+    h1 = h1 ^ k1
+    h1 = (h1 << 13) | ((h1 & 0xFFFFFFFF) >> 19)
+    h1 = h1 * 5 + 3864292196
+  }
 
-  k1 = 0;
-  var val = length & 0x03;
+  k1 = 0
+  const val = length & 0x03
   if (val == 3) {
-    k1 = (data.charCodeAt(roundedEnd + 2) & 0xFF) << 16;
-  };
+    k1 = (data.charCodeAt(roundedEnd + 2) & 0xFF) << 16
+  }
   if (val == 3 || val == 2) {
-    k1 = k1 | (data.charCodeAt(roundedEnd + 1) & 0xFF) << 8;
-  };
+    k1 = k1 | (data.charCodeAt(roundedEnd + 1) & 0xFF) << 8
+  }
   if (val == 3 || val == 2 || val == 1) {
-    k1 = k1 | (data.charCodeAt(roundedEnd) & 0xFF);
-    k1 = new bnjs(k1 * c1);
-    var k2 = new bnjs(k1.and(new bnjs(f)).shrn(17));
-    k1 = k1.shln(15).or(k2);
-    k1 = k1.mul(c2);
-    h1 = h1.xor(k1);
-  };
-  h1 = h1.xor(length);
-  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16));
-  h1 = h1.mul(new bnjs(2246822507));
-  h1 = h1.xor(h1.and(new bnjs(f)).shrn(13));
-  h1 = h1.mul(new bnjs(3266489909));
-  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16));
-  return h1.and(new bnjs(f)).toNumber();
-};
+    k1 = k1 | (data.charCodeAt(roundedEnd) & 0xFF)
+    k1 = new bnjs(k1 * c1)
+    var k2 = new bnjs(k1.and(new bnjs(f)).shrn(17))
+    k1 = k1.shln(15).or(k2)
+    k1 = k1.mul(c2)
+    h1 = h1.xor(k1)
+  }
+  h1 = h1.xor(length)
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16))
+  h1 = h1.mul(new bnjs(2246822507))
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(13))
+  h1 = h1.mul(new bnjs(3266489909))
+  h1 = h1.xor(h1.and(new bnjs(f)).shrn(16))
+  return h1.and(new bnjs(f)).toNumber()
+}
+
 
 /*
  * Public methods
@@ -223,144 +297,143 @@ var murmur3 = function(data, seed) {
  *
  */
 
-var toAddress = function(name, unscramble) {
-  if (!unscramble) {
-    unscramble = true;
-  };
-  // our method of planet discovery needs hep
-  name = name.replace(/~/g, '');
-  if (name.length == 3) {
-    return getsuffixindex(name);
-  } else if (name.length == 6) {
-    var addr = getprefixindex(name.slice(0, 3));
-    addr = addr * 256;
-    addr = addr + getsuffixindex(name.slice(3, name.length));
-    return addr;
-  } else if (name.length == 13) {
-    var addr = toAddress(name.slice(0, 6));
-    addr = addr * 65536;
-    addr = addr + toAddress(name.slice(7, addr.length));
-    if (unscramble) {
-      addr = fend(addr);
-    };
-    return addr;
-  } else {
-    return;
-  }
-};
 
-var isAddress = function(name) {
-  var r = toAddress(name);
-  return (typeof r != 'undefined' && r === r)
+// converts a @P string to an array of syllables
+const nameToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
+
+// returns the class of a ship from it's name
+const typeOfShip = name => {
+  const length = len(nameToArr(name))
+  switch(length) {
+    case 1: return 'galaxy'
+    case 2: return 'star'
+    case 4: return 'planet'
+    case 8: return 'moon'
+    case 16: return 'comet'
+    default: return 'invalid'
+  }
 }
 
 
-//var toAddress = function(name) {
-//    var nome = name.replace(/~|-/g, '');
-//    var lent = nome.length;
-//
-//    if (lent % 3 != 0) {
-//      return;
-//    }
-//
-//    var syls = lent / 3;
-//    if (syls > 1 && syls % 2 != 0) {
-//      return;
-//    }
-//
-//    if (syls == 1) {
-//      return bn(wordtonum(nome))
-//    } else if (syls >= 4 && syls <= 8) {
-//      var padr = wordtonum(nome.slice(lent - 12, lent - 6));
-//      padr = padr * 256
-//      padr = padr + wordtonum(nome.slice(lent - 6, lent));
-//      padr = fend(padr);
-//
-//      if (syls == 4) {
-//        return padr;
-//      };
-//
-//      var addr = 0;
-//      for (var i = 0; i <= syls - 6; i += 2) {
-//        addr = addr + wordtonum(nome.slice(i * 3, i * 3 + 6));
-//        addr = addr * 0x10000;
-//      };
-//      return (addr * 0x10000) + padr;
-//    } else {
-//      var addr = 0;
-//
-//      for (var i = 0; i <= syls - 2; i +=2) {
-//        addr = addr * 0x10000;
-//        addr = addr + wordtonum(nome.slice(i * 3, i * 3 + 6));
-//      };
-//      return addr;
-//    }
-//
-//}
+// converts a string @P into an integer address
+const toAddress = (name, unscramble) => {
 
-var toGalaxyName = function(galaxy) {
-  return toShipName(galaxy, 1);
-};
+  // set a default true value for unscramble
+  if (isUndefined(unscramble)) unscramble = true
 
-var toStarName = function(star) {
-  return toShipName(star, 2);
-};
+  // if the name is invalid, return undefined
+  if (!isValidName(name)) return
 
-// better ES6 better way to do this
-var toPlanetName = function(scrambled, scramble) {
-  if (!scramble) {
-    scramble = true;
-  }
-  return toShipName(scrambled, 4, scramble);
-};
+  // if the name is a string, convert to array of syllables
+  if (isString(name)) name = nameToArr(name)
 
-var toShipName = function(addr, minBytes, scramble) {
-  if (!scramble) {
-    scramble = true;
-  };
+  // concat 8 bit binary numbers of syllable indexes
+  const addr = reduce(name, (acc, syl, index) => {
+      return isOdd(index) || len(name) === 1
+        ? acc + syl2bin(getSuffixIndex(syl))
+        : acc + syl2bin(getPrefixIndex(syl))
+  }, '')
+
+  // convert back to base 10
+  const addrInt = bin2dec(addr)
+
+  // if unscramble is true, use fend()
+  return unscramble
+    ? fend(addrInt)
+    : addrInt
+}
+
+
+// Checks if a string @P is valid
+const isValidName = name => {
+  // convert string @P to array of syllables
+  const sylArr = nameToArr(name)
+
+  // Quickly fail if length of @p is greater than 1 and odd
+  if (isOdd(len(sylArr)) && len(sylArr) !== 1) return false
+
+  // check if each syllable exists
+  const tests = map(sylArr, (syl, index) => isOdd(index) || len(sylArr) === 1
+    ? doesSuffixExist(syl)
+    : doesPrefixExist(syl))
+
+  // if all syllables exist, return true, if any single syllables don't exist,
+  // return false
+  return every(tests, test => test === true)
+}
+
+
+// converts a galaxy address to a string @P
+const toGalaxyName = galaxy => toShipName(galaxy, 1)
+
+
+// converts a star address to a string @P
+const toStarName = star => toShipName(star, 2)
+
+
+// converts a planet address to a string @P
+const toPlanetName = (scrambled, scramble) => {
+  if (isUndefined(scramble)) scramble = true
+  return toShipName(scrambled, 4, scramble)
+}
+
+
+// converts an array of syllables to a string @P
+const patpArrToStr = p => reduce(p, (acc, syl, i) => isEven(i)
+  ? i === 0
+    ? `~${acc}${syl}`
+      ? i === 16
+      : `${acc}^${syl}`
+    : `${acc}-${syl}`
+  : `${acc}${syl}`
+, '')
+
+
+// converts an integer address to a string @P
+const toShipName = (addr, minBytes, scramble) => {
+  if (isUndefined(scramble)) scramble = true
 
   if (!minBytes) {
     if (addr < 0x100) {
-      minBytes = 1;
+      minBytes = 1
     } else if (addr < 0x10000) {
-      minBytes = 2;
+      minBytes = 2
     } else {
-      minBytes = 4;
+      minBytes = 4
     }
   }
 
-  if (minBytes == 4 && scramble) {
-    addr = feen(addr);
-  };
+  if (minBytes === 4 && scramble) addr = feen(addr)
 
-  var name = ""
-  for (var i = 0; i < minBytes; i ++) {
-    var byt = Math.floor(addr % 256);
-    var syllable = "";
-    if (i % 2 == 1) {
-      syllable = getprefix(byt);
-    } else {
-      syllable = getsuffix(byt);
-    }
-    if (i == 2) {
-      name = "-" + name
-    };
-    name = syllable + name;
-    addr = addr / 256;
-  };
-  return name;
-};
+  const name = reduce(seq(minBytes), (acc, index) => {
+    const byt = Math.floor(addr % 256)
+
+    addr = addr / 256
+
+    const syllable = isOdd(index)
+      ? getPrefix(byt)
+      : getSuffix(byt)
+
+    return index === 2
+      ? acc = syllable + '-' + acc
+      : acc = syllable + acc
+  }, '')
+
+  return name
+}
+
 
 module.exports = {
   toAddress: toAddress,
   toGalaxyName: toGalaxyName,
   toStarName: toStarName,
   toPlanetName: toPlanetName,
-  isShip: isAddress,
-  _wordtonum: wordtonum,
-  _getsuffix: getsuffix,
+  isValidName: isValidName,
+  // _wordtonum: wordToNum,
+  _getsuffix: getSuffix,
   _muk: muk,
   _feen: feen,
   _fend: fend,
   _teil: teil
-};
+}
