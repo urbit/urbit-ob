@@ -195,7 +195,7 @@ const teil = vip => {
 const rynd = (n, l, r) => {
   l = Math.floor(l)
   const res = [r, 0]
-  const m = n % 2 == 0
+  const m = isEven(n)
     ? new bnjs(65535)
     : new bnjs(65536)
 
@@ -209,8 +209,8 @@ const rynd = (n, l, r) => {
 
 const rund = (n, l, r) => {
   l = Math.floor(l)
-  var res = [r, 0]
-  const m = n % 2 == 0
+  const res = [r, 0]
+  const m = isEven(n)
     ? new bnjs(65535)
     : new bnjs(65536)
   const h = new bnjs(muk(raku[n], 2, r))
