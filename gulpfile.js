@@ -11,6 +11,7 @@ var json = require('rollup-plugin-json');
 var builtins = require('rollup-plugin-node-builtins');
 var rootImport = require('rollup-plugin-root-import');
 var globals = require('rollup-plugin-node-globals');
+var uglify = require('rollup-plugin-uglify-es');
 
 var cache;
 
@@ -21,19 +22,25 @@ gulp.task('default', function(cb) {
     format: "es",
     plugins: [
       resolve(),
-      commonjs(),
-      babel({
-        ignore: ['node_modules/**']
+      commonjs({
+        namedExports: {
+          'node_modules/lodash/lodash.js': [
+            'reduce',
+            'isUndefined',
+            'isString',
+            'every',
+            'map'
+          ]
+        }
       }),
-      // replace(),
-      // rootImport({
-      //   root: `${__dirname}/src`,
-      //   useEntry: 'prepend',
-      //   extensions: '.js'
-      // }),
+      babel({
+        plugins: ['babel-plugin-lodash'],
+        ignore: ['node_modules/**', 'test/**']
+      }),
       json(),
       globals(),
       builtins(),
+      uglify(),
     ]
   }).on('bundle', function(bundle){ cache = bundle; })
     .on('error', function(e){

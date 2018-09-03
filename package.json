@@ -32,6 +32,8 @@
     "rollup-plugin-node-globals": "^1.2.1"
   },
   "dependencies": {
-    "bn.js": "^4.11.8"
+    "babel-plugin-lodash": "^3.3.4",
+    "bn.js": "^4.11.8",
+    "rollup-plugin-uglify-es": "0.0.1"
   }
 }
