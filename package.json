@@ -1,5 +1,5 @@
 {
-  "name": "urbit-ob",
+  "name": "ob-js",
   "version": "1.1.0",
   "description": "utilities to convert urbit ship names back and forth between @p and @ud",
   "main": "dist/index.js",
