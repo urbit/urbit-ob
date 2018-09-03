@@ -2,7 +2,7 @@
   "name": "urbit-ob",
   "version": "1.0.0",
   "description": "utilities to convert urbit ship names back and forth between @p and @ud",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "gulp"
