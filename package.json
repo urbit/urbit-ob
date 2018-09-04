@@ -1,10 +1,11 @@
 {
-  "name": "urbit-ob",
-  "version": "1.0.0",
+  "name": "ob-js",
+  "version": "1.1.0",
   "description": "utilities to convert urbit ship names back and forth between @p and @ud",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "node test/main.js"
+    "test": "jest",
+    "build": "gulp"
   },
   "keywords": [
     "urbit"
@@ -12,10 +13,27 @@
   "author": "~poldec-tonteg",
   "license": "ISC",
   "devDependencies": {
-    "test": "^0.6.0"
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0-beta.34",
+    "isomorphic-webcrypto": "^1.6.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "rollup-plugin-babel": "github:rollup/rollup-plugin-babel",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-json": "^3.0.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-root-import": "^0.2.3",
+    "rollup-stream": "^1.24.1",
+    "vinyl-source-stream": "^2.0.0",
+    "babel-jest": "^23.4.2",
+    "jest": "^23.5.0",
+    "regenerator-runtime": "^0.12.1",
+    "rollup-plugin-node-globals": "^1.2.1"
   },
   "dependencies": {
+    "babel-plugin-lodash": "^3.3.4",
     "bn.js": "^4.11.8",
-    "lodash": "^4.17.10"
+    "rollup-plugin-uglify-es": "0.0.1"
   }
 }

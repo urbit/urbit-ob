@@ -1,5 +1,3 @@
-'use strict'
-
 /*
  * Utility methods
  */
@@ -78,7 +76,7 @@ const isOdd = n => n % 2 !== 0
 const isEven = n => !isOdd(n)
 
 // Makes an array of length num populated with its indices
-const seq = num => Array.from(Array(num), (nada, i) => i)
+const seq = n => Array.from(Array(n), (x, i) => i)
 
 // Gets the prefix at an index
 const getPrefix = i => getAt(prefixes, i)
@@ -110,20 +108,18 @@ const dec2bin = num => num.toString(2)
 // converts an @P syllable index to a binary string
 const syl2bin = index => dec2bin(index).padStart(8, '0')
 
+// converts a @P string to an array of syllables
+const patp2arr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
 
-// const wordToNum = str => {
-//   if (len(str) === 3) return getSuffixIndex(str)
-//
-//   if (len(str) === 6) {
-//     const addr = getPrefixIndex(str.slice(0, 2))
-//     const hex = addr * 0x100
-//     const sum = hex + getSuffixIndex(str.slice(3, 5))
-//     return sum
-//   }
-//
-//   return
-// }
-
+// converts an array of syllables to a string @P
+const arr2patp = a => reduce(a, (acc, syl, i) => isEven(i)
+  ? i === 0
+    ? `~${acc}${syl}`
+      ? i === 16
+      : `${acc}^${syl}`
+    : `${acc}-${syl}`
+  : `${acc}${syl}`
+, '')
 
 
 const feen = pyn => {
@@ -285,7 +281,7 @@ const murmur3 = (data, seed) => {
 
 /*
  * Public methods
- *  -- toAddress ( ship name )
+ *  -- patp2add ( ship name )
  *  --   => address number
  *  -- to{Galaxy,Star,Planet}Ship ( address number )
  *  --   => ship name
@@ -298,26 +294,43 @@ const murmur3 = (data, seed) => {
  */
 
 
-// converts a @P string to an array of syllables
-const nameToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
-
 
 // returns the class of a ship from it's name
-const typeOfShip = name => {
-  const length = len(nameToArr(name))
-  switch(length) {
-    case 1: return 'galaxy'
-    case 2: return 'star'
-    case 4: return 'planet'
-    case 8: return 'moon'
-    case 16: return 'comet'
-    default: return 'invalid'
-  }
+const tierOfpatp = name => {
+  const l = len(patp2arr(name))
+  if (l <= 1) return 'galaxy'
+  if (l <= 2) return 'star'
+  if (l <= 4) return 'planet'
+  if (l <= 8) return 'moon'
+  if (l <= 16) return 'comet'
+  return 'invalid'
+}
+
+
+const tierOfadd = addr => {
+  const b = len(dec2bin(addr))
+  if (b <= 8) return 'galaxy'
+  if (b <= 16) return 'star'
+  if (b <= 32) return 'planet'
+  if (b <= 64) return 'moon'
+  if (b <= 128) return 'comet'
+  return 'invalid'
+}
+
+
+const add2patp = addr => {
+  const b = len(dec2bin(addr))
+  if (b <= 8) return toGalaxyName(addr)
+  if (b <= 16) return toStarName(addr)
+  if (b <= 32) return toPlanetName(addr)
+  if (b <= 64) console.error('Convert to moon not currently supported.')
+  if (b <= 128) console.error('Convert to comet not currently supported.')
+  return 'invalid'
 }
 
 
 // converts a string @P into an integer address
-const toAddress = (name, unscramble) => {
+const patp2add = (name, unscramble) => {
 
   // set a default true value for unscramble
   if (isUndefined(unscramble)) unscramble = true
@@ -326,7 +339,7 @@ const toAddress = (name, unscramble) => {
   if (!isValidName(name)) return
 
   // if the name is a string, convert to array of syllables
-  if (isString(name)) name = nameToArr(name)
+  if (isString(name)) name = patp2arr(name)
 
   // concat 8 bit binary numbers of syllable indexes
   const addr = reduce(name, (acc, syl, index) => {
@@ -348,7 +361,7 @@ const toAddress = (name, unscramble) => {
 // Checks if a string @P is valid
 const isValidName = name => {
   // convert string @P to array of syllables
-  const sylArr = nameToArr(name)
+  const sylArr = patp2arr(name)
 
   // Quickly fail if length of @p is greater than 1 and odd
   if (isOdd(len(sylArr)) && len(sylArr) !== 1) return false
@@ -365,33 +378,22 @@ const isValidName = name => {
 
 
 // converts a galaxy address to a string @P
-const toGalaxyName = galaxy => toShipName(galaxy, 1)
+const toGalaxyName = galaxy => _add2patp(galaxy, 1)
 
 
 // converts a star address to a string @P
-const toStarName = star => toShipName(star, 2)
+const toStarName = star => _add2patp(star, 2)
 
 
 // converts a planet address to a string @P
 const toPlanetName = (scrambled, scramble) => {
   if (isUndefined(scramble)) scramble = true
-  return toShipName(scrambled, 4, scramble)
+  return _add2patp(scrambled, 4, scramble)
 }
 
 
-// converts an array of syllables to a string @P
-const patpArrToStr = p => reduce(p, (acc, syl, i) => isEven(i)
-  ? i === 0
-    ? `~${acc}${syl}`
-      ? i === 16
-      : `${acc}^${syl}`
-    : `${acc}-${syl}`
-  : `${acc}${syl}`
-, '')
-
-
 // converts an integer address to a string @P
-const toShipName = (addr, minBytes, scramble) => {
+const _add2patp = (addr, minBytes, scramble) => {
   if (isUndefined(scramble)) scramble = true
 
   if (!minBytes) {
@@ -425,15 +427,38 @@ const toShipName = (addr, minBytes, scramble) => {
 
 
 module.exports = {
-  toAddress: toAddress,
+  patp2add: patp2add,
+  add2patp: add2patp,
+
+  tierOfpatp: tierOfpatp,
+  tierOfadd: tierOfadd,
+
   toGalaxyName: toGalaxyName,
   toStarName: toStarName,
   toPlanetName: toPlanetName,
   isValidName: isValidName,
-  // _wordtonum: wordToNum,
+
+  _add2patp: _add2patp,
   _getsuffix: getSuffix,
   _muk: muk,
   _feen: feen,
   _fend: fend,
-  _teil: teil
+  _teil: teil,
+  _getAt: getAt,
+  _len: len,
+  _lid: lid,
+  _indexOf: indexOf,
+  _isOdd: isOdd,
+  _isEven: isEven,
+  _seq: seq,
+  _getPrefix: getPrefix,
+  _getSuffix: getSuffix,
+  _doesExist: doesExist,
+  _doesSuffixExist: doesSuffixExist,
+  _doesPrefixExist: doesPrefixExist,
+  _getPrefixIndex: getPrefixIndex,
+  _getSuffixIndex: getSuffixIndex,
+  _bin2dec: bin2dec,
+  _dec2bin: dec2bin,
+  _syl2bin: syl2bin,
 }
