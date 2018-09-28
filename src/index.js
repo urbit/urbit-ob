@@ -320,6 +320,7 @@ const lsh = (a, b, c) => {
   return bex(sub).mul(c)
 }
 
+// bignum patp
 const patp = (n) => {
   const zero = new bnjs(0)
   const one = new bnjs(1)
@@ -354,7 +355,6 @@ const patp = (n) => {
     ? getSuffix(sxz)
     : loop(sxz, zero, ''))
 }
-
 
 // returns the class of a ship from it's name
 const tierOfpatp = name => {
@@ -524,4 +524,6 @@ module.exports = {
   _bin2dec: bin2dec,
   _dec2bin: dec2bin,
   _syl2bin: syl2bin,
+
+  _arr2patp: arr2patp
 }
