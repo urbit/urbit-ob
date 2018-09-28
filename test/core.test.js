@@ -1,3 +1,4 @@
+const bnjs = require('bn.js');
 const ob = require('../src/index.js');
 
 
@@ -107,4 +108,25 @@ test('identifies binzod as a star from address', () => {
 
 test('identifies poldec-tonteg as a planet from address', () => {
   expect(ob.tierOfadd(9896704)).toBe('planet');
+});
+
+test('correctly encodes 0 as @p', () => {
+  let expected = '~zod';
+  expect(ob.patp('0')).toBe(expected);
+});
+
+test('correctly encodes 4294967295 as @p', () => {
+  let expected = '~dostec-risfen';
+  expect(ob.patp('4294967295')).toBe(expected);
+});
+
+test('correctly encodes 328256967394537077627 as @p', () => {
+  let expected = '~dozsyx--halrux-samlep-posmus-ranrux';
+  expect(ob.patp('328256967394537077627')).toBe(expected);
+});
+
+test('correctly encodes a big hex string as @p', () => {
+  let input = new bnjs('7468697320697320736f6d6520766572792068696768207175616c69747920656e74726f7079', 16);
+  let expected = '~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud';
+  expect(ob.patp(input)).toBe(expected);
 });

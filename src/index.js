@@ -2,7 +2,6 @@
  * Utility methods
  */
 
-// var bn = require('bignum')
 const bnjs = require('bn.js')
 const { reduce, isUndefined, isString, every, map } = require('lodash')
 
@@ -123,16 +122,17 @@ const arr2patp = a => reduce(a, (acc, syl, i) => isEven(i)
 
 
 const feen = pyn => {
-  const f = 4294967295
   if (pyn >= 0x10000 && pyn <= 0xFFFFFFFF) {
     const tmp = fice(pyn - 0x10000) + 0x10000
     return tmp
   }
   if (pyn >= 0x100000000 && pyn <= 0xffffffffffffffff) {
-    const pynBn = new bnjs(pyn)
-    const lo = pynBn.and(f)
-    const hi = pynBn.and('18446744069414584000')
-    return hi.or(feen(lo)).toNumber()
+    const f = new bnjs('4294967295')
+    const g = new bnjs('18446744069414584000')
+    const lo = pyn.and(f)
+    const hi = pyn.and(g)
+    let next = new bnjs(feen(lo))
+    return hi.or(next)
   }
   return pyn
 }
@@ -293,7 +293,68 @@ const murmur3 = (data, seed) => {
  *
  */
 
+const bex = (n) => {
+  const two = new bnjs(2)
+  return two.pow(n)
+}
 
+const rsh = (a, b, c) => {
+  const sub = bex(a).mul(b)
+  return c.div(bex(sub))
+}
+
+const met = (a, b, c = new bnjs(0)) => {
+  const zero = new bnjs(0)
+  const one = new bnjs(1)
+  return b.eq(zero)
+    ? c
+    : met(a, rsh(a, one, b), c.add(one))
+}
+
+const end = (a, b, c) => {
+  return c.mod(bex(bex(a).mul(b)))
+}
+
+const lsh = (a, b, c) => {
+  const sub = bex(a).mul(b)
+  return bex(sub).mul(c)
+}
+
+// bignum patp
+const patp = (n) => {
+  const zero = new bnjs(0)
+  const one = new bnjs(1)
+  const three = new bnjs(3)
+  const four = new bnjs(4)
+
+  let sxz = new bnjs(feen(n))
+  let dyy = met(four, sxz)
+
+  let loop = (tsxz, timp, trep) => {
+    let log = end(four, one, tsxz)
+    let pre = getPrefix(rsh(three, one, log))
+    let suf = getSuffix(end(three, one, log))
+    let etc =
+      (timp.mod(four)).eq(zero)
+        ? timp.eq(zero)
+          ? ''
+          : '--'
+        : '-'
+
+    let res = pre + suf + etc + trep
+
+    return timp.eq(dyy)
+      ? trep
+      : loop(rsh(four, one, tsxz), timp.add(one), res)
+  }
+
+  let dyx = met(three, sxz)
+
+  return '~' +
+    (dyx.lte(one)
+    ? getSuffix(sxz)
+    : loop(sxz, zero, ''))
+}
 
 // returns the class of a ship from it's name
 const tierOfpatp = name => {
@@ -438,6 +499,8 @@ module.exports = {
   toPlanetName: toPlanetName,
   isValidName: isValidName,
 
+  patp: patp,
+
   _add2patp: _add2patp,
   _getsuffix: getSuffix,
   _muk: muk,
@@ -461,4 +524,6 @@ module.exports = {
   _bin2dec: bin2dec,
   _dec2bin: dec2bin,
   _syl2bin: syl2bin,
+
+  _arr2patp: arr2patp
 }
