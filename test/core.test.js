@@ -110,23 +110,45 @@ test('identifies poldec-tonteg as a planet from address', () => {
   expect(ob.tierOfadd(9896704)).toBe('planet');
 });
 
-test('correctly encodes 0 as @p', () => {
+test('patp correctly encodes 0 as @p', () => {
   let expected = '~zod';
   expect(ob.patp('0')).toBe(expected);
 });
 
-test('correctly encodes 4294967295 as @p', () => {
+test('patp correctly encodes 4294967295 as @p', () => {
   let expected = '~dostec-risfen';
   expect(ob.patp('4294967295')).toBe(expected);
 });
 
-test('correctly encodes 328256967394537077627 as @p', () => {
+test('patp correctly encodes 328256967394537077627 as @p', () => {
   let expected = '~dozsyx--halrux-samlep-posmus-ranrux';
   expect(ob.patp('328256967394537077627')).toBe(expected);
 });
 
-test('correctly encodes a big hex string as @p', () => {
+test('patp correctly encodes a big hex string as @p', () => {
   let input = new bnjs('7468697320697320736f6d6520766572792068696768207175616c69747920656e74726f7079', 16);
   let expected = '~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud';
   expect(ob.patp(input)).toBe(expected);
+});
+
+test('clan works as expected', () => {
+  expect(ob._clan(new bnjs(0))).toBe('czar');
+  expect(ob._clan(new bnjs(255))).toBe('czar');
+  expect(ob._clan(new bnjs(256))).toBe('king');
+  expect(ob._clan(new bnjs(50000))).toBe('king');
+  expect(ob._clan(new bnjs(70000))).toBe('duke');
+  expect(ob._clan(new bnjs(2170000))).toBe('duke');
+  expect(ob._clan(new bnjs('5232170000'))).toBe('earl');
+  expect(ob._clan(new bnjs('525525525125232170000'))).toBe('pawn');
+})
+
+test('sein identifies parents correctly', () => {
+  expect(ob.sein(new bnjs(0))).toBe('zod');
+  expect(ob.sein(new bnjs(1))).toBe('nec');
+  expect(ob.sein(new bnjs(250))).toBe('rep');
+  expect(ob.sein(new bnjs(256))).toBe('zod');
+  expect(ob.sein(new bnjs(257))).toBe('nec');
+  expect(ob.sein(new bnjs(50000))).toBe('sec');
+  expect(ob.sein(new bnjs(15663360))).toBe('marzod');
+  expect(ob.sein(new bnjs(15663361))).toBe('marnec');
 });
