@@ -294,27 +294,55 @@ const murmur3 = (data, seed) => {
  *
  */
 
-const bex = (n) => {
-  const two = new bnjs(2)
-  return two.pow(n)
+const zero = new bnjs(0)
+const one = new bnjs(1)
+const two = new bnjs(2)
+const three = new bnjs(3)
+const four = new bnjs(4)
+const five = new bnjs(5)
+
+const clan = (who) => {
+  const wid = met(three, who)
+  return wid.lte(one)
+    ? 'czar'
+    : wid.eq(two)
+    ? 'king'
+    : wid.lte(four)
+    ? 'duke'
+    : wid.lte(new bnjs(8))
+    ? 'earl'
+    : 'pawn'
 }
+
+const sein = (who) => {
+  const mir = clan(who)
+  const res =
+    mir === 'czar'
+    ? who
+    : mir === 'king'
+    ? end(three, one, who)
+    : mir === 'duke'
+    ? end(four, one, who)
+    : mir === 'earl'
+    ? end(five, one, who)
+    : zero
+  return add2patp(res)
+}
+
+const bex = (n) => two.pow(n)
 
 const rsh = (a, b, c) => {
   const sub = bex(a).mul(b)
   return c.div(bex(sub))
 }
 
-const met = (a, b, c = new bnjs(0)) => {
-  const zero = new bnjs(0)
-  const one = new bnjs(1)
+const met = (a, b, c = zero) => {
   return b.eq(zero)
     ? c
     : met(a, rsh(a, one, b), c.add(one))
 }
 
-const end = (a, b, c) => {
-  return c.mod(bex(bex(a).mul(b)))
-}
+const end = (a, b, c) => c.mod(bex(bex(a).mul(b)))
 
 const lsh = (a, b, c) => {
   const sub = bex(a).mul(b)
@@ -323,11 +351,6 @@ const lsh = (a, b, c) => {
 
 // bignum patp
 const patp = (n) => {
-  const zero = new bnjs(0)
-  const one = new bnjs(1)
-  const three = new bnjs(3)
-  const four = new bnjs(4)
-
   let sxz = new bnjs(feen(n))
   let dyy = met(four, sxz)
 
@@ -522,6 +545,9 @@ module.exports = {
   patp: patp,
   patq: patq,
 
+  sein: sein,
+  _clan: clan,
+
   _add2patp: _add2patp,
   _getsuffix: getSuffix,
   _muk: muk,
@@ -545,6 +571,8 @@ module.exports = {
   _bin2dec: bin2dec,
   _dec2bin: dec2bin,
   _syl2bin: syl2bin,
+
+  _met: met,
 
   _arr2patp: arr2patp
 }
