@@ -131,6 +131,30 @@ test('patp correctly encodes a big hex string as @p', () => {
   expect(ob.patp(input)).toBe(expected);
 });
 
+test('patq correctly encodes 0 as @q', () => {
+  let input = new bnjs('0');
+  let expected = '~zod';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('patq correctly encodes 0x102 as @q', () => {
+  let input = new bnjs('0102', 'hex');
+  let expected = '~marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('patq correctly encodes 0x10102 as @q', () => {
+  let input = new bnjs('010102', 'hex');
+  let expected = '~nec-marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('patq correctly encodes 0x1010101010101010102 as @q', () => {
+  let input = new bnjs('01010101010101010102', 'hex');
+  let expected = '~marnec-marnec-marnec-marnec-marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
+
 test('clan works as expected', () => {
   expect(ob._clan(new bnjs(0))).toBe('czar');
   expect(ob._clan(new bnjs(255))).toBe('czar');
