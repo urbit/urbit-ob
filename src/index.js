@@ -3,7 +3,8 @@
  */
 
 const bnjs = require('bn.js')
-const { reduce, isUndefined, isString, every, map } = require('lodash')
+const { reduce, concat, chunk, isUndefined,
+        isString, every, map } = require('lodash')
 
 const raku = [
   3077398253,
@@ -356,6 +357,25 @@ const patp = (n) => {
     : loop(sxz, zero, ''))
 }
 
+// bignum patq
+const patq = (n) => {
+  const buff = n.toArrayLike(Buffer)
+
+  const chunked =
+    buff.length % 2 === 1 && buff.length !== 1
+    ? concat([[buff[0]]], chunk(buff.slice(1), 2))
+    : chunk(buff, 2)
+
+  const name = byts =>
+    isUndefined(byts[1])
+    ? getSuffix(byts[0])
+    : getPrefix(byts[0]) + getSuffix(byts[1])
+
+  return chunked.reduce((acc, elem) =>
+    acc + (acc === '~' ? '' : '-') + name(elem), '~')
+}
+
+
 // returns the class of a ship from it's name
 const tierOfpatp = name => {
   const l = len(patp2arr(name))
@@ -500,6 +520,7 @@ module.exports = {
   isValidName: isValidName,
 
   patp: patp,
+  patq: patq,
 
   _add2patp: _add2patp,
   _getsuffix: getSuffix,

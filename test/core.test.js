@@ -130,3 +130,27 @@ test('correctly encodes a big hex string as @p', () => {
   let expected = '~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud';
   expect(ob.patp(input)).toBe(expected);
 });
+
+test('correctly encode 0 as @q', () => {
+  let input = new bnjs('0');
+  let expected = '~zod';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('correctly encode 0x102 as @q', () => {
+  let input = new bnjs('0102', 'hex');
+  let expected = '~marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('correctly encode 0x10102 as @q', () => {
+  let input = new bnjs('010102', 'hex');
+  let expected = '~nec-marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
+
+test('correctly encode 0x1010101010101010102 as @q', () => {
+  let input = new bnjs('01010101010101010102', 'hex');
+  let expected = '~marnec-marnec-marnec-marnec-marbud';
+  expect(ob.patq(input)).toBe(expected);
+});
