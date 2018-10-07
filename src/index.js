@@ -4,7 +4,7 @@
 
 const bnjs = require('bn.js')
 const { reduce, concat, chunk, isUndefined,
-        isString, every, map } = require('lodash')
+        isString, every, map, split } = require('lodash')
 
 const raku = [
   3077398253,
@@ -50,6 +50,12 @@ nydhusrelrudneshesfetdesretdunlernyrsebhulryllud\
 remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun\
 lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 `
+
+// split string at the indicated index
+const splitAt = (index, str) => [str.slice(0, index), str.slice(index)];
+
+// convert a decimal number to a hex string
+const dec2hex = dec => dec.toString(16).padStart(2, '0')
 
 // groups suffixes into array of syllables
 const suffixes = suf.match(/.{1,3}/g)
@@ -398,6 +404,21 @@ const patq = (n) => {
     acc + (acc === '~' ? '' : '-') + name(elem), '~')
 }
 
+hex2patq = hex => patq(new bnjs(hex, 'hex'))
+
+patq2hex = str => {
+  const chunks = split(str.slice(1), '-')
+  const splat = map(chunks, chunk => {
+    let syls = splitAt(3, chunk)
+    let hex =
+      syls[1] === ''
+      ? dec2hex(getSuffixIndex(syls[0]))
+      : dec2hex(getPrefixIndex(syls[0])) +
+        dec2hex(getSuffixIndex(syls[1]))
+    return hex
+  })
+  return splat.join('')
+}
 
 // returns the class of a ship from it's name
 const tierOfpatp = name => {
@@ -544,6 +565,8 @@ module.exports = {
 
   patp: patp,
   patq: patq,
+  hex2patq: hex2patq,
+  patq2hex: patq2hex,
 
   sein: sein,
   _clan: clan,

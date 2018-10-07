@@ -155,6 +155,12 @@ test('patq correctly encodes 0x1010101010101010102 as @q', () => {
   expect(ob.patq(input)).toBe(expected);
 });
 
+test('hex2patq works', () => {
+  let hex = '6d7920617765736f6d65207572626974207469636b65742c206920616d20736f206c75636b79';
+  let expected = '~tastud-holruc-sidwet-salpel-taswet-holdeg-paddec-davdut-holdut-davwex-balwet-divwen-holdet-holruc-taslun-salpel-holtux-dacwex-baltud';
+  expect(ob.hex2patq(hex)).toBe(expected);
+})
+
 test('clan works as expected', () => {
   expect(ob._clan(new bnjs(0))).toBe('czar');
   expect(ob._clan(new bnjs(255))).toBe('czar');
