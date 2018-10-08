@@ -391,17 +391,28 @@ const patq = (n) => {
   const buff = n.toArrayLike(Buffer)
 
   const chunked =
-    buff.length % 2 === 1 && buff.length !== 1
+    isOdd(buff.length) && buff.length > 1
     ? concat([[buff[0]]], chunk(buff.slice(1), 2))
     : chunk(buff, 2)
+
+  const prefixName = byts =>
+    isUndefined(byts[1])
+    ? getPrefix(0) + getSuffix(byts[0])
+    : getPrefix(byts[0]) + getSuffix(byts[1])
 
   const name = byts =>
     isUndefined(byts[1])
     ? getSuffix(byts[0])
     : getPrefix(byts[0]) + getSuffix(byts[1])
 
+  // zero-pad odd, >1 bytelength strings for ease of string comparison
+  const alg = pair =>
+    isOdd(pair.length) && chunked.length > 1
+    ? prefixName(pair)
+    : name(pair)
+
   return chunked.reduce((acc, elem) =>
-    acc + (acc === '~' ? '' : '-') + name(elem), '~')
+    acc + (acc === '~' ? '' : '-') + alg(elem), '~')
 }
 
 hex2patq = hex => patq(new bnjs(hex, 'hex'))

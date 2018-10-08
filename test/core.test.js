@@ -145,7 +145,7 @@ test('patq correctly encodes 0x102 as @q', () => {
 
 test('patq correctly encodes 0x10102 as @q', () => {
   let input = new bnjs('010102', 'hex');
-  let expected = '~nec-marbud';
+  let expected = '~doznec-marbud';
   expect(ob.patq(input)).toBe(expected);
 });
 
