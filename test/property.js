@@ -13,6 +13,7 @@ eqModLeadingZeroBytes = (s, t) =>
   removeLeadingZeroBytes(s) === removeLeadingZeroBytes(t)
 
 describe('@q encoding', () => {
+
   let hexString = jsc.string.smap(
     x => Buffer.from(x).toString('hex'),
     x => Buffer.from(x, 'hex').toString()
@@ -32,7 +33,8 @@ describe('@q encoding', () => {
       ob.hex2patq(ob.patq2hex(str)) === str
     )
 
-    jsc.assert(iso0)
-    jsc.assert(iso1)
+    jsc.assert(iso0, { tests: 200 })
+    jsc.assert(iso1, { tests: 200 })
   })
+
 })
