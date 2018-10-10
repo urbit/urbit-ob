@@ -1,10 +1,10 @@
 {
   "name": "ob-js",
-  "version": "1.3.0",
-  "description": "utilities to convert urbit ship names back and forth between @p and @ud",
+  "version": "1.4.0",
+  "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest test/*.test.js && mocha test/property.js",
+    "test": "jest --coverage test/*.test.js && mocha test/property.js",
     "build": "gulp"
   },
   "keywords": [
