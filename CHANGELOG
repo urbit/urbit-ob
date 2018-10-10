@@ -1,0 +1,5 @@
+# Changelog
+
+- 1.4.0 (2018-10-10)
+    * Add 'eqPatq' function for comparing @q values for equality (i.e., modulo
+      leading zero bytes).

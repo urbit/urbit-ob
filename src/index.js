@@ -431,6 +431,44 @@ patq2hex = str => {
   return splat.join('')
 }
 
+
+/**
+ * Remove all leading zero bytes from a hex-encoded string.
+ * @param  {string}  str a hex encoded string
+ * @return  {string}
+ */
+const removeLeadingZeroBytes = str =>
+  str.slice(0, 2) === '00'
+  ? removeLeadingZeroBytes(str.slice(2))
+  : str
+
+
+
+/**
+ * Equality comparison, modulo leading zero bytes.
+ * @param  {string}  s a hex-encoded string
+ * @param  {string}  t a hex-encoded string
+ * @return  {bool}
+ */
+const eqModLeadingZeroBytes = (s, t) =>
+  removeLeadingZeroBytes(s) === removeLeadingZeroBytes(t)
+
+
+
+/**
+ * Equality comparison on @q values.
+ * @param  {string}  p a @q-encoded string
+ * @param  {string}  q a @q-encoded string
+ * @return  {bool}
+ */
+const eqPatq = (p, q) => {
+  phex = patq2hex(p)
+  qhex = patq2hex(q)
+  return eqModLeadingZeroBytes(phex, qhex)
+}
+
+
+
 // returns the class of a ship from it's name
 const tierOfpatp = name => {
   const l = len(patp2arr(name))
@@ -578,6 +616,7 @@ module.exports = {
   patq: patq,
   hex2patq: hex2patq,
   patq2hex: patq2hex,
+  eqPatq: eqPatq,
 
   sein: sein,
   _clan: clan,
@@ -605,6 +644,8 @@ module.exports = {
   _bin2dec: bin2dec,
   _dec2bin: dec2bin,
   _syl2bin: syl2bin,
+
+  _eqModLeadingZeroBytes: eqModLeadingZeroBytes,
 
   _met: met,
 
