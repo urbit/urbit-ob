@@ -386,6 +386,8 @@ const patp = (n) => {
     : loop(sxz, zero, ''))
 }
 
+
+
 // bignum patq
 const patq = (n) => {
   const buff = n.toArrayLike(Buffer)
@@ -415,9 +417,38 @@ const patq = (n) => {
     acc + (acc === '~' ? '' : '-') + alg(elem), '~')
 }
 
-hex2patq = hex => patq(new bnjs(hex, 'hex'))
 
-patq2hex = str => {
+
+/**
+ * Convert a hex-encoded string to @q.  Preserves leading zero bytes.
+ * @param  {string}  str a hex-encoded string
+ * @return  {string} a @q-encoded string
+ */
+const hex2patq = hex => {
+  const buf = Buffer.from(hex, 'hex')
+  const chunks =
+    isOdd(buf.length)
+    ? concat([[buf[0]]], chunk(buf.slice(1), 2))
+    : chunk(buf, 2)
+  const splat = map(chunks, chunk =>
+    isUndefined(chunk[1])
+    ? getPrefix(0) + getSuffix(chunk[0])
+    : getPrefix(chunk[0]) + getSuffix(chunk[1])
+  )
+  return hex.length === 0
+    ? '~zod'
+    : splat.reduce((acc, elem) =>
+        acc + (acc === '~' ? '' : '-') + elem, '~')
+}
+
+
+
+/**
+ * Convert a @q-encoded string to hexadecimal.  Preserves leading zero bytes.
+ * @param  {string}  str a @q-encoded string
+ * @return  {string} a hex-encoded string
+ */
+const patq2hex = str => {
   const chunks = split(str.slice(1), '-')
   const splat = map(chunks, chunk => {
     let syls = splitAt(3, chunk)
@@ -428,8 +459,11 @@ patq2hex = str => {
         dec2hex(getSuffixIndex(syls[1]))
     return hex
   })
-  return splat.join('')
+  return str.length === 0
+    ? '00'
+    : splat.join('')
 }
+
 
 
 /**
