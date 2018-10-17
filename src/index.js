@@ -496,8 +496,8 @@ const eqModLeadingZeroBytes = (s, t) =>
  * @return  {bool}
  */
 const eqPatq = (p, q) => {
-  phex = patq2hex(p)
-  qhex = patq2hex(q)
+  const phex = patq2hex(p)
+  const qhex = patq2hex(q)
   return eqModLeadingZeroBytes(phex, qhex)
 }
 
