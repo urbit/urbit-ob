@@ -26,10 +26,13 @@ gulp.task('default', function(cb) {
         namedExports: {
           'node_modules/lodash/lodash.js': [
             'reduce',
+            'concat',
+            'chunk',
             'isUndefined',
             'isString',
             'every',
-            'map'
+            'map',
+            'split'
           ]
         }
       }),

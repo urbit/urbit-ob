@@ -1,6 +1,6 @@
 {
   "name": "ob-js",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "dist/index.js",
   "scripts": {
