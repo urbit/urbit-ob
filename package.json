@@ -1,11 +1,11 @@
 {
   "name": "ob-js",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --coverage test/*.test.js && mocha test/property.js",
-    "build": "gulp"
+    "build": "mkdir -p dist && browserify src/index.js -s urbit-ob > dist/index.js"
   },
   "keywords": [
     "urbit"
