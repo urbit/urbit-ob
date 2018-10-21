@@ -1,7 +1,3 @@
-/*
- * Utility methods
- */
-
 const bnjs = require('bn.js')
 
 const {
@@ -11,10 +7,9 @@ const {
   isString,
   reduce,
   concat,
-  split
+  split,
+  chunk
   } = require('lodash')
-
-const chunk = require('lodash.chunk')
 
 const raku = [
   3077398253,

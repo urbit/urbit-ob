@@ -1,11 +1,10 @@
 {
-  "name": "ob-js",
-  "version": "1.4.4",
+  "name": "urbit-ob",
+  "version": "2.0.0",
   "description": "Utilities for Hoon-style atom printing and conversion",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "nyc mocha --reporter spec",
-    "build": "mkdir -p dist && browserify src/index.js -s urbit-ob > dist/index.js"
+    "test": "nyc mocha --reporter spec"
   },
   "keywords": [
     "urbit"
@@ -20,7 +19,6 @@
   },
   "dependencies": {
     "bn.js": "^4.11.8",
-    "lodash": "^4.17.11",
-    "lodash.chunk": "^4.2.0"
+    "lodash": "^4.17.11"
   }
 }
