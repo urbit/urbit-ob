@@ -3,8 +3,18 @@
  */
 
 const bnjs = require('bn.js')
-const { reduce, concat, chunk, isUndefined,
-        isString, every, map, split } = require('lodash')
+
+const {
+  isUndefined,
+  every,
+  map,
+  isString,
+  reduce,
+  concat,
+  split
+  } = require('lodash')
+
+const chunk = require('lodash.chunk')
 
 const raku = [
   3077398253,
@@ -632,7 +642,6 @@ const _add2patp = (addr, minBytes, scramble) => {
 
   return name
 }
-
 
 module.exports = {
   patp2add: patp2add,
