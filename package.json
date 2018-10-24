@@ -6,6 +6,10 @@
   "scripts": {
     "test": "nyc mocha --reporter spec"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbit/ob-js.git"
+  },
   "keywords": [
     "urbit"
   ],
