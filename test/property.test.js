@@ -1,10 +1,10 @@
-
-const expect = require('chai').expect
+const { expect } = require('chai')
 const jsc = require('jsverify')
-const ob = require('../src')
 const bn = require('bn.js')
 
-describe('@q encoding', () => {
+const ob = require('../src')
+
+describe('@q encoding properties', () => {
 
   let hexString = jsc.string.smap(
     x => Buffer.from(x).toString('hex'),
