@@ -1,0 +1,139 @@
+// ++  ob
+//
+// See arvo/sys/hoon.hoon.
+
+const BN = require('bn.js')
+const { muk } = require('./muk')
+
+const ux_1_0000 = new BN('10000', 'hex')
+const ux_ffff_ffff = new BN('ffffffff', 'hex')
+const ux_1_0000_0000 = new BN('100000000', 'hex')
+const ux_ffff_ffff_ffff_ffff = new BN('ffffffffffffffff', 'hex')
+const ux_ffff_ffff_0000_0000 = new BN('ffffffff00000000', 'hex')
+
+const u_65535 = new BN('65535')
+const u_65536 = new BN('65536')
+
+/**
+ * Conceal structure v2.
+ *
+ * @param  {String, Number, BN}  pyn
+ * @return  {BN}
+ */
+const feen = (arg) => {
+  const loop = (pyn) => {
+    const lo = pyn.and(ux_ffff_ffff)
+    const hi = pyn.and(ux_ffff_ffff_0000_0000)
+
+    return pyn.gte(ux_1_0000) && pyn.lte(ux_ffff_ffff)
+      ? ux_1_0000.add(fice(pyn.sub(ux_1_0000)))
+      : pyn.gte(ux_1_0000_0000) && pyn.lte(ux_ffff_ffff_ffff_ffff)
+      ? hi.or(loop(lo))
+      : pyn
+  }
+
+  return loop(new BN(arg))
+}
+
+/**
+ * Restore structure v2.
+ *
+ * @param  {String, Number, BN}  pyn
+ * @return  {BN}
+ */
+const fend = (arg) => {
+  const loop = (cry) => {
+    const lo = cry.and(ux_ffff_ffff)
+    const hi = cry.and(ux_ffff_ffff_0000_0000)
+
+    return cry.gte(ux_1_0000) && cry.lte(ux_ffff_ffff)
+      ? ux_1_0000.add(teil(cry.sub(ux_1_0000)))
+      : cry.gte(ux_1_0000_0000) && cry.lte(ux_ffff_ffff_ffff_ffff)
+      ? hi.or(loop(lo))
+      : cry
+  }
+
+  return loop(new BN(arg))
+}
+
+/**
+ * Adapted from Black and Rogaway "Ciphers with arbitrary finite domains",
+ * 2002.
+ *
+ * @param  {String, Number, BN}
+ * @return  {BN}
+ */
+const fice = (arg) => {
+  const nor = new BN(arg)
+
+  const sel =
+    rynd(3,
+    rynd(2,
+    rynd(1,
+    rynd(0, [ nor.mod(u_65535), nor.div(u_65535) ]))))
+
+  return (u_65535.mul(sel[0])).add(sel[1])
+}
+
+/**
+ * Reverse fice.
+ *
+ * @param  {String}  vip
+ * @return  {BN}
+ */
+const teil = (arg) => {
+  const vip = new BN(arg)
+
+  const sel =
+    rund(0,
+    rund(1,
+    rund(2,
+    rund(3, [ vip.mod(u_65535), vip.div(u_65535) ]))))
+
+  return (u_65535.mul(sel[0])).add(sel[1])
+}
+
+/**
+ * Feistel round.
+ *
+ * @param  {Number}  n
+ * @param  {Array<BN>}  [l, r]
+ * @return  {Array<BN>}
+ */
+const rynd = (n, arr) => {
+  const l = arr[0]
+  const r = arr[1]
+  const p = n % 2 === 0 ? u_65535 : u_65536
+  return [ r, l.add(muk(raku[n], 2, r)).mod(p) ]
+}
+
+/**
+ * Reverse round.
+ *
+ * @param  {Number}  n
+ * @param  {Array<BN>}  [l, r]
+ * @return  {Array<BN>}
+ */
+const rund = (n, arr) => {
+  const l = arr[0]
+  const r = arr[1]
+  const p = n % 2 === 0 ? u_65535 : u_65536
+  return [ r, l.add(p).sub(muk(raku[n], 2, r).mod(p)).mod(p) ]
+}
+
+const raku = [
+  0xb76d5eed,
+  0xee281300,
+  0x85bcae01,
+  0x4b387af7,
+]
+
+module.exports = {
+  feen,
+  fend,
+  fice,
+  teil,
+  rynd,
+  rund,
+  raku
+}

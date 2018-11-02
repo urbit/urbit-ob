@@ -1,5 +1,14 @@
 # Changelog
 
+- 3.0.0 (2018-11-02)
+    * Major library cleanup and API simplification.  Eliminates old, dead,
+      or redundant code that had accrued over time.  Exposes patp, patp2dec,
+      patp2hex, and hex2patp functions as the API core (and similarly for @q).
+    * Adds proper in-library documentation, and beefs up the README.
+    * Adds property tests for both internals and exposed functions.
+    * Standardises output, e.g. by always including a leading tilde in @p
+      values.
+
 - 2.0.0 (2018-10-22)
     * Bundle/distribute as CommonJS.
 
