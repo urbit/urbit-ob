@@ -25,7 +25,7 @@ A simple `npm install` should do it.
 The library exposes two families of functions:
 
 * `patp / patp2dec / patp2hex / hex2patp`
-* `patq / patq2dec / patq2hex / hex2patq``
+* `patq / patq2dec / patq2hex / hex2patq`
 
 They are pretty self-explanatory.  Use `patp` or `patq` to convert base-10
 numbers (or strings encoding base-10 numbers) to `@p` or `@q` respectively.
