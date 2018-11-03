@@ -48,6 +48,17 @@ describe('patp, etc.', () => {
     .to.equal('~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud')
   })
 
+  it('patp2hex throws on invalid patp', () => {
+    let input = () => patp2hex('nidsut-tomdun')
+    expect(input).to.throw()
+    input = () => patp2hex('~nidsut-tomdzn')
+    expect(input).to.throw()
+    input = () => patp2hex('~sut-tomdun')
+    expect(input).to.throw()
+    input = () => patp2hex('~nidsut-dun')
+    expect(input).to.throw()
+  })
+
   it('patp and patp2dec are inverses', () => {
     let iso0 = jsc.forall(jsc.uint32, num =>
       parseInt(patp2dec(patp(num))) === num
@@ -96,6 +107,17 @@ describe('patq, etc.', () => {
     expect(hex2patq('01010101010101010102')).to.equal('~marnec-marnec-marnec-marnec-marbud')
     expect(hex2patq('6d7920617765736f6d65207572626974207469636b65742c206920616d20736f206c75636b79'))
     .to.equal('~tastud-holruc-sidwet-salpel-taswet-holdeg-paddec-davdut-holdut-davwex-balwet-divwen-holdet-holruc-taslun-salpel-holtux-dacwex-baltud')
+  })
+
+  it('patq2hex throws on invalid patp', () => {
+    let input = () => patq2hex('nidsut-tomdun')
+    expect(input).to.throw()
+    input = () => patq2hex('~nidsut-tomdzn')
+    expect(input).to.throw()
+    input = () => patq2hex('~sut-tomdun')
+    expect(input).to.throw()
+    input = () => patq2hex('~nidsut-dun')
+    expect(input).to.throw()
   })
 
   it('patq and patq2dec are inverses', () => {

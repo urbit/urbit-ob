@@ -52,6 +52,9 @@ remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun\
 lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 `
 
+const patp2syls = name =>
+  name.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
 const splitAt = (index, str) => [str.slice(0, index), str.slice(index)]
 
 const prefixes = pre.match(/.{1,3}/g)
@@ -129,14 +132,16 @@ const hex2patp = (hex) =>
  * @return  {String}
  */
 const patp2hex = (name) => {
-  const arr =
-    name.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+  if (isValidPat(name) === false) {
+    throw new Error('patp2hex: not a valid @p')
+  }
+  const syls = patp2syls(name)
 
   const syl2bin = idx =>
     idx.toString(2).padStart(8, '0')
 
-  const addr = lodash.reduce(arr, (acc, syl, idx) =>
-    idx % 2 !== 0 || arr.length === 1
+  const addr = lodash.reduce(syls, (acc, syl, idx) =>
+    idx % 2 !== 0 || syls.length === 1
       ? acc + syl2bin(suffixes.indexOf(syl))
       : acc + syl2bin(prefixes.indexOf(syl)),
   '')
@@ -215,8 +220,11 @@ const hex2patq = hex =>
  * @param  {String}  name @q
  * @return  {String}
  */
-const patq2hex = str => {
-  const chunks = lodash.split(str.slice(1), '-')
+const patq2hex = name => {
+  if (isValidPat(name) === false) {
+    throw new Error('patq2hex: not a valid @q')
+  }
+  const chunks = lodash.split(name.slice(1), '-')
   const dec2hex = dec =>
     dec.toString(16).padStart(2, '0')
 
@@ -228,7 +236,7 @@ const patq2hex = str => {
         dec2hex(suffixes.indexOf(syls[1]))
   })
 
-  return str.length === 0
+  return name.length === 0
     ? '00'
     : splat.join('')
 }
@@ -271,7 +279,6 @@ const clan = who => {
     : 'comet'
 }
 
-
 /**
  * Determine the parent of a @p value.
  *
@@ -292,6 +299,33 @@ const sein = (name) => {
     ? end(five, one, who)
     : zero
   return patp(res)
+}
+
+/**
+ * Weakly check if a string is a valid @p or @q value.
+ *
+ * This is, at present, a pretty weak internal sanity check.  It doesn't
+ * confirm the structure precisely (e.g. dashes), and for @q, it's required
+ * that q values of (greater than one) odd bytelength have been zero-padded.
+ * So, for example, '~doznec-binwod' will be considered a valid @q, but
+ * '~nec-binwod' will not.
+ *
+ * @param  {String}  name a @p or @q value
+ * @return  {String}
+ */
+const isValidPat = name => {
+  const syls = patp2syls(name)
+
+  const leadingTilde = name.slice(0, 1) === '~'
+  const wrongLength = syls.length % 2 !== 0 && syls.length !== 1
+  const sylsExist = lodash.reduce(syls, (acc, syl, index) =>
+    acc &&
+      (index % 2 !== 0 || syls.length === 1
+        ? suffixes.includes(syl)
+        : prefixes.includes(syl)),
+    true)
+
+  return leadingTilde && !wrongLength && sylsExist
 }
 
 module.exports = {
