@@ -159,6 +159,15 @@ describe('clan/sein', () => {
     expect(clan('~dozryt--wolmep-racmyl-padpeg-mocryp')).to.equal('comet')
   })
 
+  it('clan throws on invalid input', () => {
+    let input = () => clan('~zord')
+    expect(input).to.throw()
+    input = () => clan('zod')
+    expect(input).to.throw()
+    input = () => clan('~nid-tomdun')
+    expect(input).to.throw()
+  })
+
   it('sein works as expected', () => {
     expect(sein('~zod')).to.equal('~zod')
     expect(sein('~nec')).to.equal('~nec')
@@ -169,5 +178,15 @@ describe('clan/sein', () => {
     expect(sein('~nidsut-tomdun')).to.equal('~marzod')
     expect(sein('~sansym-ribnux')).to.equal('~marnec')
   })
+
+  it('sein throws on invalid input', () => {
+    let input = () => sein('~zord')
+    expect(input).to.throw()
+    input = () => sein('zod')
+    expect(input).to.throw()
+    input = () => sein('~nid-tomdun')
+    expect(input).to.throw()
+  })
+
 })
 
