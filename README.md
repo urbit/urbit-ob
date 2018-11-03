@@ -18,7 +18,14 @@ number, in particular, hence the 'ob' in the library's name.
 
 ## Install
 
-A simple `npm install` should do it.
+You can grab the library from npm via:
+
+```
+npm install urbit-ob
+```
+
+Otherwise you can just clone the repo, and a simple `npm install` will pull
+down the dependencies.
 
 ## Usage
 
