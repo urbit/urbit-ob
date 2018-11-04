@@ -59,8 +59,17 @@ There are a few other noteworthy functions exposed as well:
 * `sein`, for determining the parent of a `@p` value
 * `eqPatq`, for comparing `@q` values for equality
 
-In the third case: `@q` values are considered equal modulo the existence of
-leading zero bytes, so that, for example:
+For example, you can check that `~marzod` is a star with parent `~zod`:
+
+```
+> ob.clan('~marzod')
+'star'
+> ob.sein('~marzod')
+'~zod'
+```
+
+And note that `@q` values are considered equal modulo the existence of leading
+zero bytes:
 
 ```
 > '~doznec-marzod' === '~nec-marzod'
@@ -72,3 +81,4 @@ true
 ## Testing
 
 A simple `npm test` will run the test suite.
+
