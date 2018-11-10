@@ -328,6 +328,37 @@ const isValidPat = name => {
   return leadingTilde && !wrongLength && sylsExist
 }
 
+/**
+ * Remove all leading zero bytes from a sliceable value.
+ * @param  {String, Buffer, Array}
+ * @return  {String}
+ */
+const removeLeadingZeroBytes = str =>
+  str.slice(0, 2) === '00'
+  ? removeLeadingZeroBytes(str.slice(2))
+  : str
+
+/**
+ * Equality comparison, modulo leading zero bytes.
+ * @param  {String, Buffer, Array}
+ * @param  {String, Buffer, Array}
+ * @return  {Bool}
+ */
+const eqModLeadingZeroBytes = (s, t) =>
+  lodash.isEqual(removeLeadingZeroBytes(s), removeLeadingZeroBytes(t))
+
+/**
+ * Equality comparison on @q values.
+ * @param  {String}  p a @q-encoded string
+ * @param  {String}  q a @q-encoded string
+ * @return  {Bool}
+ */
+const eqPatq = (p, q) => {
+  const phex = patq2hex(p)
+  const qhex = patq2hex(q)
+  return eqModLeadingZeroBytes(phex, qhex)
+}
+
 module.exports = {
   patp,
   patp2hex,
@@ -338,5 +369,6 @@ module.exports = {
   patq2dec,
   hex2patq,
   clan,
-  sein
+  sein,
+  eqPatq
 }

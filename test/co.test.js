@@ -11,7 +11,8 @@ const {
   patq2dec,
   hex2patq,
   clan,
-  sein
+  sein,
+  eqPatq
   } = require('../src/internal/co')
 
 const patps = jsc.uint32.smap(
@@ -188,5 +189,13 @@ describe('clan/sein', () => {
     expect(input).to.throw()
   })
 
+})
+
+describe('eqPatq', () => {
+  it('works as expected', () => {
+    expect(eqPatq('~dozzod-dozzod', '~zod')).to.equal(true)
+    expect(eqPatq('~dozzod-mardun', '~mardun')).to.equal(true)
+    expect(eqPatq('~dozzod-mardun', '~mardun-dozzod')).to.equal(false)
+  })
 })
 
