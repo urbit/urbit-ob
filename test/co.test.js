@@ -1,15 +1,15 @@
 const BN = require('bn.js')
-const { expect } = require('chai');
+const { expect } = require('chai')
 const jsc = require('jsverify')
 const {
   patp,
   patp2hex,
-  patp2dec,
   hex2patp,
+  patp2dec,
   patq,
   patq2hex,
-  patq2dec,
   hex2patq,
+  patq2dec,
   clan,
   sein,
   eqPatq
