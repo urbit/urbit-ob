@@ -126,6 +126,15 @@ const hex2patp = (hex) =>
   patp(new BN(hex, 'hex'))
 
 /**
+ * Convert a Buffer to a @p-encoded string.
+ *
+ * @param  {Buffer}  buf
+ * @return  {String}
+ */
+const buf2patp = (buf) =>
+  hex2patp(buf.toString('hex'))
+
+/**
  * Convert a @p-encoded string to a hex-encoded string.
  *
  * @param  {String}  name @p
@@ -147,8 +156,20 @@ const patp2hex = (name) => {
   '')
 
   const bn = new BN(addr, 2)
-  return ob.fend(bn).toString('hex')
+  const hex = ob.fend(bn).toString('hex')
+  return hex.length % 2 !== 0
+    ? hex.padStart(hex.length + 1, '0')
+    : hex
 }
+
+/**
+ * Convert a @p-encoded string to a Buffer.
+ *
+ * @param  {String}  name
+ * @return  {Buffer}
+ */
+const patp2buf = name =>
+  Buffer.from(patp2hex(name), 'hex')
 
 /**
  * Convert a @p-encoded string to a bignum.
@@ -175,10 +196,18 @@ const patp2dec = name =>
  * @return  {String}
  */
 const patq = (arg) => {
-  const n = new BN(arg)
+  const bn = new BN(arg)
+  const buf = bn.toArrayLike(Buffer)
+  return buf2patq(buf)
+}
 
-  const buf = n.toArrayLike(Buffer)
-
+/**
+ * Convert a Buffer into a @q-encoded string.
+ *
+ * @param  {Buffer}  buf
+ * @return  {String}
+ */
+const buf2patq = buf => {
   const chunked =
     buf.length % 2 !== 0 && buf.length > 1
     ? lodash.concat([[buf[0]]], lodash.chunk(buf.slice(1), 2))
@@ -206,11 +235,20 @@ const patq = (arg) => {
 /**
  * Convert a hex-encoded string to a @q-encoded string.
  *
+ * Note that this preserves leading zero bytes.
+ *
  * @param  {String}  hex
  * @return  {String}
  */
-const hex2patq = hex =>
-  patq(new BN(hex, 'hex'))
+const hex2patq = arg => {
+  const hex =
+    arg.length % 2 !== 0
+    ? arg.padStart(arg.length + 1, '0')
+    : arg
+
+  const buf = Buffer.from(hex, 'hex')
+  return buf2patq(buf)
+}
 
 /**
  * Convert a @q-encoded string to a hex-encoded string.
@@ -249,6 +287,17 @@ const patq2hex = name => {
  */
 const patq2bn = name =>
   new BN(patq2hex(name), 'hex')
+
+/**
+ * Convert a @q-encoded string to a Buffer.
+ *
+ * @param  {String}  name @q
+ * @return  {Buffer}
+ */
+const patq2buf = name => {
+  const hex = patq2hex(name)
+  return Buffer.from(hex, 'hex')
+}
 
 /**
  * Convert a @q-encoded string to a decimal-encoded string.
@@ -328,15 +377,47 @@ const isValidPat = name => {
   return leadingTilde && !wrongLength && sylsExist
 }
 
+/**
+ * Remove all leading zero bytes from a sliceable value.
+ * @param  {String, Buffer, Array}
+ * @return  {String}
+ */
+const removeLeadingZeroBytes = str =>
+  str.slice(0, 2) === '00'
+  ? removeLeadingZeroBytes(str.slice(2))
+  : str
+
+/**
+ * Equality comparison, modulo leading zero bytes.
+ * @param  {String, Buffer, Array}
+ * @param  {String, Buffer, Array}
+ * @return  {Bool}
+ */
+const eqModLeadingZeroBytes = (s, t) =>
+  lodash.isEqual(removeLeadingZeroBytes(s), removeLeadingZeroBytes(t))
+
+/**
+ * Equality comparison on @q values.
+ * @param  {String}  p a @q-encoded string
+ * @param  {String}  q a @q-encoded string
+ * @return  {Bool}
+ */
+const eqPatq = (p, q) => {
+  const phex = patq2hex(p)
+  const qhex = patq2hex(q)
+  return eqModLeadingZeroBytes(phex, qhex)
+}
+
 module.exports = {
   patp,
   patp2hex,
-  patp2dec,
   hex2patp,
+  patp2dec,
   patq,
   patq2hex,
-  patq2dec,
   hex2patq,
+  patq2dec,
   clan,
-  sein
+  sein,
+  eqPatq
 }

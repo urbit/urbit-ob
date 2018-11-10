@@ -1,17 +1,18 @@
 const BN = require('bn.js')
-const { expect } = require('chai');
+const { expect } = require('chai')
 const jsc = require('jsverify')
 const {
   patp,
   patp2hex,
-  patp2dec,
   hex2patp,
+  patp2dec,
   patq,
   patq2hex,
-  patq2dec,
   hex2patq,
+  patq2dec,
   clan,
-  sein
+  sein,
+  eqPatq
   } = require('../src/internal/co')
 
 const patps = jsc.uint32.smap(
@@ -188,5 +189,13 @@ describe('clan/sein', () => {
     expect(input).to.throw()
   })
 
+})
+
+describe('eqPatq', () => {
+  it('works as expected', () => {
+    expect(eqPatq('~dozzod-dozzod', '~zod')).to.equal(true)
+    expect(eqPatq('~dozzod-mardun', '~mardun')).to.equal(true)
+    expect(eqPatq('~dozzod-mardun', '~mardun-dozzod')).to.equal(false)
+  })
 })
 
