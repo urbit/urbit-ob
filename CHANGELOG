@@ -1,5 +1,9 @@
 # Changelog
 
+- 3.1.0 (2018-11-16)
+    * Exports 'isValidPatp' and 'isValidPatq' functions for checking the
+      validity of @p and @q strings.
+
 - 3.0.0 (2018-11-02)
     * Major library cleanup and API simplification.  Eliminates old, dead,
       or redundant code that had accrued over time.  Exposes patp, patp2dec,
