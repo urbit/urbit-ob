@@ -12,7 +12,9 @@ const {
   patq2dec,
   clan,
   sein,
-  eqPatq
+  eqPatq,
+  isValidPatq,
+  isValidPatp
   } = require('../src/internal/co')
 
 const patps = jsc.uint32.smap(
@@ -199,3 +201,29 @@ describe('eqPatq', () => {
   })
 })
 
+describe('isValidPat{q, p}', () => {
+  it('isValidPatp returns true for valid @p values', () => {
+    expect(isValidPatp('~zod')).to.equal(true)
+    expect(isValidPatp('~marzod')).to.equal(true)
+    expect(isValidPatp('~nidsut-tomdun')).to.equal(true)
+  })
+
+  it('isValidPatp returns false for invalid @p values', () => {
+    expect(isValidPatp('~hu')).to.equal(false)
+    expect(isValidPatp('~what')).to.equal(false)
+    expect(isValidPatp('sudnit-duntom')).to.equal(false)
+  })
+
+  it('isValidPatq returns true for valid @p values', () => {
+    expect(isValidPatq('~zod')).to.equal(true)
+    expect(isValidPatq('~marzod')).to.equal(true)
+    expect(isValidPatq('~nidsut-tomdun')).to.equal(true)
+    expect(isValidPatq('~dozzod-binwes-nidsut-tomdun')).to.equal(true)
+  })
+
+  it('isValidPatq returns false for invalid @p values', () => {
+    expect(isValidPatq('~hu')).to.equal(false)
+    expect(isValidPatq('~what')).to.equal(false)
+    expect(isValidPatq('sudnit-duntom')).to.equal(false)
+  })
+})
