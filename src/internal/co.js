@@ -353,11 +353,11 @@ const sein = (name) => {
 /**
  * Weakly check if a string is a valid @p or @q value.
  *
- * This is, at present, a pretty weak internal sanity check.  It doesn't
- * confirm the structure precisely (e.g. dashes), and for @q, it's required
- * that q values of (greater than one) odd bytelength have been zero-padded.
- * So, for example, '~doznec-binwod' will be considered a valid @q, but
- * '~nec-binwod' will not.
+ * This is, at present, a pretty weak sanity check.  It doesn't confirm the
+ * structure precisely (e.g. dashes), and for @q, it's required that q values
+ * of (greater than one) odd bytelength have been zero-padded.  So, for
+ * example, '~doznec-binwod' will be considered a valid @q, but '~nec-binwod'
+ * will not.
  *
  * @param  {String}  name a @p or @q value
  * @return  {String}
@@ -419,5 +419,7 @@ module.exports = {
   patq2dec,
   clan,
   sein,
-  eqPatq
+  eqPatq,
+  isValidPatq: isValidPat, // reserving for diff impls in future
+  isValidPatp: isValidPat
 }
