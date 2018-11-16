@@ -31,13 +31,14 @@ down the dependencies.
 
 The library exposes two families of functions:
 
-* `patp / patp2dec / patp2hex / hex2patp`
-* `patq / patq2dec / patq2hex / hex2patq`
+* `patp / patp2dec / patp2hex / hex2patp / isValidPatp`
+* `patq / patq2dec / patq2hex / hex2patq / isValidPatq`
 
 They are pretty self-explanatory.  Use `patp` or `patq` to convert base-10
 numbers (or strings encoding base-10 numbers) to `@p` or `@q` respectively.
 Use `patp2dec` or `patq2dec` to go in reverse.  `patp2hex`, `patq2hex`, and
-their inverses work similarly.
+their inverses work similarly.  `isValidPat{p, q}` can be used to check the
+validity of a `@p` or `@q` string.
 
 Some examples:
 
@@ -51,6 +52,8 @@ Some examples:
 '~doznec-binwes'
 > ob.patq2hex('~marned-wismul-nilsev-botnyt')
 '01ca0e51d20462f3'
+> ob.isValidPatq('~marned-wismul-nilsev-botnyt')
+> true
 ```
 
 There are a few other noteworthy functions exposed as well:
