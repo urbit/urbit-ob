@@ -209,6 +209,7 @@ describe('isValidPat{q, p}', () => {
   })
 
   it('isValidPatp returns false for invalid @p values', () => {
+    expect(isValidPatp('')).to.equal(false)
     expect(isValidPatp('~hu')).to.equal(false)
     expect(isValidPatp('~what')).to.equal(false)
     expect(isValidPatp('sudnit-duntom')).to.equal(false)
@@ -222,6 +223,7 @@ describe('isValidPat{q, p}', () => {
   })
 
   it('isValidPatq returns false for invalid @p values', () => {
+    expect(isValidPatq('')).to.equal(false)
     expect(isValidPatq('~hu')).to.equal(false)
     expect(isValidPatq('~what')).to.equal(false)
     expect(isValidPatq('sudnit-duntom')).to.equal(false)

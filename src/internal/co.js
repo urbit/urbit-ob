@@ -366,15 +366,20 @@ const isValidPat = name => {
   const syls = patp2syls(name)
 
   const leadingTilde = name.slice(0, 1) === '~'
-  const wrongLength = syls.length % 2 !== 0 && syls.length !== 1
-  const sylsExist = lodash.reduce(syls, (acc, syl, index) =>
-    acc &&
-      (index % 2 !== 0 || syls.length === 1
-        ? suffixes.includes(syl)
-        : prefixes.includes(syl)),
-    true)
 
-  return leadingTilde && !wrongLength && sylsExist
+  if (leadingTilde === false) {
+    return false
+  } else {
+    const wrongLength = syls.length % 2 !== 0 && syls.length !== 1
+    const sylsExist = lodash.reduce(syls, (acc, syl, index) =>
+      acc &&
+        (index % 2 !== 0 || syls.length === 1
+          ? suffixes.includes(syl)
+          : prefixes.includes(syl)),
+      true)
+
+    return !wrongLength && sylsExist
+  }
 }
 
 /**
