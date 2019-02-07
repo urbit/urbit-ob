@@ -186,8 +186,15 @@ const patp2bn = name =>
  * @param  {String}  name @p
  * @return  {String}
  */
-const patp2dec = name =>
-  patp2bn(name).toString()
+const patp2dec = name => {
+  let bn
+  try {
+    bn = patp2bn(name)
+  } catch(_) {
+    throw new Error('patp2dec: not a valid @p')
+  }
+  return bn.toString()
+}
 
 /**
  * Convert a number to a @q-encoded string.
@@ -305,8 +312,15 @@ const patq2buf = name => {
  * @param  {String}  name @q
  * @return  {String}
  */
-const patq2dec = name =>
-  patq2bn(name).toString()
+const patq2dec = name => {
+  let bn
+  try {
+    bn = patq2bn(name)
+  } catch(_) {
+    throw new Error('patq2dec: not a valid @q')
+  }
+  return bn.toString()
+}
 
 /**
  * Determine the ship class of a @p value.
@@ -315,7 +329,13 @@ const patq2dec = name =>
  * @return  {String}
  */
 const clan = who => {
-  const name = patp2bn(who)
+  let name
+  try {
+    name = patp2bn(who)
+  } catch(_) {
+    throw new Error('clan: not a valid @p')
+  }
+
   const wid = met(three, name)
   return wid.lte(one)
     ? 'galaxy'
@@ -334,9 +354,21 @@ const clan = who => {
  * @param  {String}  @p
  * @return  {String}
  */
-const sein = (name) => {
-  const mir = clan(name)
-  const who = patp2bn(name)
+const sein = name => {
+  let who
+  try {
+    who = patp2bn(name)
+  } catch(_) {
+    throw new Error('sein: not a valid @p')
+  }
+
+  let mir
+  try {
+    mir = clan(name)
+  } catch(_) {
+    throw new Error('sein: not a valid @p')
+  }
+
   const res =
     mir === 'galaxy'
     ? who
@@ -363,6 +395,10 @@ const sein = (name) => {
  * @return  {String}
  */
 const isValidPat = name => {
+  if (typeof name !== 'string') {
+    throw new Error('isValidPat: non-string input')
+  }
+
   const syls = patp2syls(name)
 
   const leadingTilde = name.slice(0, 1) === '~'
@@ -408,8 +444,20 @@ const eqModLeadingZeroBytes = (s, t) =>
  * @return  {Bool}
  */
 const eqPatq = (p, q) => {
-  const phex = patq2hex(p)
-  const qhex = patq2hex(q)
+  let phex
+  try {
+    phex = patq2hex(p)
+  } catch(_) {
+    throw new Error('eqPatq: not a valid @q')
+  }
+
+  let qhex
+  try {
+    qhex = patq2hex(q)
+  } catch(_) {
+    throw new Error('eqPatq: not a valid @q')
+  }
+
   return eqModLeadingZeroBytes(phex, qhex)
 }
 
