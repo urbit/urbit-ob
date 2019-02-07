@@ -1,5 +1,10 @@
 # Changelog
 
+- 3.2.0 (2019-02-08)
+    * Improvements to error reporting.  E.g., instead of 'clan("~nidso")'
+      throwing an error labelled 'patp2hex', it will now throw one labelled
+      'clan'.
+
 - 3.1.1 (2018-12-01)
     * Short-circuit on isValidPatp and isValidPatq when there is no leading
       tilde.
