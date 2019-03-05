@@ -128,6 +128,114 @@ const raku = [
   0x4b387af7,
 ]
 
+const Fe = (r, a, b, k, m) => {
+  const c = fe(r, a, b, m)
+  return (
+      c.lt(k)
+    ? c
+    : fe(r, a, b, c)
+  )
+}
+
+// this is the "official" version that seems to correspond to the paper
+// const fe = (r, a, b, m) => {
+//   const loop = (j, ell, arr) => {
+//     if (j === 0) {
+//       return (
+//           r % 2 !== 0
+//         ? a.mul(ell).add(arr)
+//         : a.mul(arr).add(ell)
+//       )
+//     } else {
+//       const f = muk(raku[r - j], 2, arr)
+//
+//       const tmp =
+//           j % 2 !== 0
+//         ? ell.add(f).mod(a)
+//         : ell.add(f).mod(b)
+//
+//       return loop(j - 1, arr, tmp)
+//     }
+//   }
+//
+//   const L = m.mod(a)
+//   const R = m.div(a)
+//
+//   return loop(r, L, R)
+// }
+
+// const fe = (r, a, b, m) => {
+//   const loop = (j, ell, arr) => {
+//     console.log(`${ell.toString()} ${arr.toString()}`)
+//     if (j === 0) {
+//       return (
+//           r % 2 !== 0
+//         ? a.mul(ell).add(arr)
+//         : a.mul(arr).add(ell)
+//       )
+//     } else {
+//       const f = muk(raku[r - j], 2, arr)
+//
+//       const tmp =
+//           j % 2 !== 0
+//         ? ell.add(f).mod(b)
+//         : ell.add(f).mod(a)
+//
+//       return loop(j - 1, arr, tmp)
+//     }
+//   }
+//
+//   const L = m.mod(a)
+//   const R = m.div(a)
+//
+//   return loop(r, L, R)
+// }
+
+// NB (jtobin): test me exhaustively
+const fe = (r, a, b, m) => {
+  const loop = (j, ell, arr) => {
+    if (j > r) {
+      return (
+          r % 2 !== 0
+        ? a.mul(ell).add(arr)
+        : a.mul(arr).add(ell)
+      )
+    } else {
+      const f = muk(raku[r - j], 2, arr)
+
+      const tmp =
+          j % 2 !== 0
+        ? ell.add(f).mod(a)
+        : ell.add(f).mod(b)
+
+      return loop(j + 1, arr, tmp)
+    }
+  }
+
+  const L = m.mod(a)
+  const R = m.div(a)
+
+  return loop(1, L, R)
+}
+
+const feis = arg =>
+  Fe(4, u_65535, u_65536, ux_ffff_ffff, new BN(arg))
+
+const fein = (arg) => {
+  const loop = (pyn) => {
+    const lo = pyn.and(ux_ffff_ffff)
+    const hi = pyn.and(ux_ffff_ffff_0000_0000)
+
+    return pyn.gte(ux_1_0000) && pyn.lte(ux_ffff_ffff)
+      ? ux_1_0000.add(feis(pyn.sub(ux_1_0000)))
+      : pyn.gte(ux_1_0000_0000) && pyn.lte(ux_ffff_ffff_ffff_ffff)
+      ? hi.or(loop(lo))
+      : pyn
+  }
+
+  return loop(new BN(arg))
+}
+
 module.exports = {
   feen,
   fend,
@@ -135,5 +243,11 @@ module.exports = {
   teil,
   rynd,
   rund,
-  raku
+  raku,
+
+  fe,
+  Fe,
+  feis,
+
+  fein
 }

@@ -461,6 +461,38 @@ const eqPatq = (p, q) => {
   return eqModLeadingZeroBytes(phex, qhex)
 }
 
+const vatp = (arg) => {
+  const n = new BN(arg)
+
+  const sxz = ob.fein(n)
+  const dyy = met(four, sxz)
+
+  const loop = (tsxz, timp, trep) => {
+    const log = end(four, one, tsxz)
+    const pre = prefixes[rsh(three, one, log)]
+    const suf = suffixes[end(three, one, log)]
+    const etc =
+      (timp.mod(four)).eq(zero)
+        ? timp.eq(zero)
+          ? ''
+          : '--'
+        : '-'
+
+    const res = pre + suf + etc + trep
+
+    return timp.eq(dyy)
+      ? trep
+      : loop(rsh(four, one, tsxz), timp.add(one), res)
+  }
+
+  const dyx = met(three, sxz)
+
+  return '~' +
+    (dyx.lte(one)
+    ? suffixes[sxz]
+    : loop(sxz, zero, ''))
+}
+
 module.exports = {
   patp,
   patp2hex,
@@ -474,5 +506,7 @@ module.exports = {
   sein,
   eqPatq,
   isValidPatq: isValidPat, // reserving for diff impls in future
-  isValidPatp: isValidPat
+  isValidPatp: isValidPat,
+
+  vatp
 }
