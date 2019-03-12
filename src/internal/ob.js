@@ -14,6 +14,39 @@ const ux_ffff_ffff_0000_0000 = new BN('ffffffff00000000', 'hex')
 const u_65535 = new BN('65535')
 const u_65536 = new BN('65536')
 
+// PRF seeds
+const raku = [
+  0xb76d5eed,
+  0xee281300,
+  0x85bcae01,
+  0x4b387af7,
+]
+
+// a PRF for j in { 0, .., 3 }
+const F = (j, arg) =>
+  muk(raku[j], 2, arg)
+
+/**
+ * Conceal structure v3.
+ *
+ * @param {String, Number, BN} pyn
+ * @return  {BN}
+ */
+const fein = (arg) => {
+  const loop = (pyn) => {
+    const lo = pyn.and(ux_ffff_ffff)
+    const hi = pyn.and(ux_ffff_ffff_0000_0000)
+
+    return pyn.gte(ux_1_0000) && pyn.lte(ux_ffff_ffff)
+      ? ux_1_0000.add(feis(pyn.sub(ux_1_0000)))
+      : pyn.gte(ux_1_0000_0000) && pyn.lte(ux_ffff_ffff_ffff_ffff)
+      ? hi.or(loop(lo))
+      : pyn
+  }
+
+  return loop(new BN(arg))
+}
+
 /**
  * Conceal structure v2.
  *
@@ -54,6 +87,52 @@ const fend = (arg) => {
   }
 
   return loop(new BN(arg))
+}
+
+/**
+ * Generalised Feistel cipher.
+ *
+ * See: Black and Rogaway (2002), "Ciphers with arbitrary finite domains."
+ *
+ * @param  {String, Number, BN}
+ * @return  {BN}
+ */
+const feis = arg =>
+  Fe(4, u_65535, u_65536, ux_ffff_ffff, F, new BN(arg))
+
+const Fe = (r, a, b, k, f, m) => {
+  const c = fe(r, a, b, f, m)
+  return (
+      c.lt(k)
+    ? c
+    : fe(r, a, b, f, c)
+  )
+}
+
+const fe = (r, a, b, f, m) => {
+  const loop = (j, ell, arr) => {
+    if (j > r) {
+      return (
+          r % 2 !== 0
+        ? a.mul(ell).add(arr)
+        : a.mul(arr).add(ell)
+      )
+    } else {
+      const eff = f(j - 1, arr)
+
+      const tmp =
+          j % 2 !== 0
+        ? ell.add(eff).mod(a)
+        : ell.add(eff).mod(b)
+
+      return loop(j + 1, arr, tmp)
+    }
+  }
+
+  const L = m.mod(a)
+  const R = m.div(a)
+
+  return loop(1, L, R)
 }
 
 /**
@@ -107,13 +186,6 @@ const rynd = (n, arr) => {
   return [ r, l.add(muk(raku[n], 2, r)).mod(p) ]
 }
 
-const raku = [
-  0xb76d5eed,
-  0xee281300,
-  0x85bcae01,
-  0x4b387af7,
-]
-
 /**
  * Reverse round.
  *
@@ -128,71 +200,6 @@ const rund = (n, arr) => {
   return [ r, l.add(p).sub(muk(raku[n], 2, r).mod(p)).mod(p) ]
 }
 
-
-const Fe = (r, a, b, k, f, m) => {
-  const c = fe(r, a, b, f, m)
-  return (
-      c.lt(k)
-    ? c
-    : fe(r, a, b, f, c)
-  )
-}
-
-const fe = (r, a, b, f, m) => {
-  const loop = (j, ell, arr) => {
-    if (j > r) {
-      return (
-          r % 2 !== 0
-        ? a.mul(ell).add(arr)
-        : a.mul(arr).add(ell)
-      )
-    } else {
-      const eff = f(r - j, arr)
-
-      const tmp =
-          j % 2 !== 0
-        ? ell.add(eff).mod(a)
-        : ell.add(eff).mod(b)
-
-      return loop(j + 1, arr, tmp)
-    }
-  }
-
-  const L = m.mod(a)
-  const R = m.div(a)
-
-  return loop(1, L, R)
-}
-
-const F = (j, arr) => {
-  const raku = [
-    0xb76d5eed,
-    0xee281300,
-    0x85bcae01,
-    0x4b387af7,
-  ]
-
-  return muk(raku[j], 2, arr)
-}
-
-const feis = arg =>
-  Fe(4, u_65535, u_65536, ux_ffff_ffff, F, new BN(arg))
-
-const fein = (arg) => {
-  const loop = (pyn) => {
-    const lo = pyn.and(ux_ffff_ffff)
-    const hi = pyn.and(ux_ffff_ffff_0000_0000)
-
-    return pyn.gte(ux_1_0000) && pyn.lte(ux_ffff_ffff)
-      ? ux_1_0000.add(feis(pyn.sub(ux_1_0000)))
-      : pyn.gte(ux_1_0000_0000) && pyn.lte(ux_ffff_ffff_ffff_ffff)
-      ? hi.or(loop(lo))
-      : pyn
-  }
-
-  return loop(new BN(arg))
-}
-
 module.exports = {
   feen,
   fend,
@@ -200,6 +207,8 @@ module.exports = {
   teil,
   rynd,
   rund,
+
+  F,
   raku,
 
   fe,
