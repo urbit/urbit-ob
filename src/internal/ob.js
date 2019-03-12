@@ -48,6 +48,27 @@ const fein = (arg) => {
 }
 
 /**
+ * Restore structure v3.
+ *
+ * @param  {String, Number, BN}  cry
+ * @return  {BN}
+ */
+const fynd = (arg) => {
+  const loop = (cry) => {
+    const lo = cry.and(ux_ffff_ffff)
+    const hi = cry.and(ux_ffff_ffff_0000_0000)
+
+    return cry.gte(ux_1_0000) && cry.lte(ux_ffff_ffff)
+      ? ux_1_0000.add(tail(cry.sub(ux_1_0000)))
+      : cry.gte(ux_1_0000_0000) && cry.lte(ux_ffff_ffff_ffff_ffff)
+      ? hi.or(loop(lo))
+      : cry
+  }
+
+  return loop(new BN(arg))
+}
+
+/**
  * Conceal structure v2.
  *
  * @param  {String, Number, BN}  pyn
@@ -155,6 +176,59 @@ const fice = (arg) => {
 }
 
 /**
+ * Reverse 'feis'.
+ *
+ * @param {Number, String, BN}  arg
+ * @return  {BN}
+ */
+const tail = arg =>
+  Fen(4, u_65535, u_65536, ux_ffff_ffff, F, new BN(arg))
+
+const Fen = (r, a, b, k, f, m) => {
+  const c = fen(r, a, b, f, m)
+  return (
+      c.lt(k)
+    ? c
+    : fen(r, a, b, f, c)
+  )
+}
+
+const fen = (r, a, b, f, m) => {
+  const loop = (j, ell, arr) => {
+    if (j < 1) {
+      return a.mul(arr).add(ell)
+    } else {
+      const eff = f(j - 1, ell)
+
+      // NB (jtobin):
+      //
+      // Slight deviation from B&R (2002) here to prevent negative values.  We
+      // add 'a' or 'b' to arr as appropriate and reduce 'eff' modulo the same
+      // number before performing subtraction.
+      //
+      const tmp =
+          j % 2 !== 0
+        ? arr.add(a).sub(eff.mod(a)).mod(a)
+        : arr.add(b).sub(eff.mod(b)).mod(b)
+
+      return loop(j - 1, tmp, ell)
+    }
+  }
+
+  const R =
+      r % 2 !== 0
+    ? m.mod(a)
+    : m.div(a)
+
+  const L =
+      r % 2 !== 0
+    ? m.div(a)
+    : m.mod(a)
+
+  return loop(r, L, R)
+}
+
+/**
  * Reverse fice.
  *
  * @param  {String}  vip
@@ -214,6 +288,11 @@ module.exports = {
   fe,
   Fe,
   feis,
+  fein,
 
-  fein
+  fen,
+  Fen,
+  tail,
+  fynd
+
 }
