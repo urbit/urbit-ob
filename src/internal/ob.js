@@ -107,6 +107,13 @@ const rynd = (n, arr) => {
   return [ r, l.add(muk(raku[n], 2, r)).mod(p) ]
 }
 
+const raku = [
+  0xb76d5eed,
+  0xee281300,
+  0x85bcae01,
+  0x4b387af7,
+]
+
 /**
  * Reverse round.
  *
@@ -121,78 +128,17 @@ const rund = (n, arr) => {
   return [ r, l.add(p).sub(muk(raku[n], 2, r).mod(p)).mod(p) ]
 }
 
-const raku = [
-  0xb76d5eed,
-  0xee281300,
-  0x85bcae01,
-  0x4b387af7,
-]
 
-const Fe = (r, a, b, k, m) => {
-  const c = fe(r, a, b, m)
+const Fe = (r, a, b, k, f, m) => {
+  const c = fe(r, a, b, f, m)
   return (
       c.lt(k)
     ? c
-    : fe(r, a, b, c)
+    : fe(r, a, b, f, c)
   )
 }
 
-// this is the "official" version that seems to correspond to the paper
-// const fe = (r, a, b, m) => {
-//   const loop = (j, ell, arr) => {
-//     if (j === 0) {
-//       return (
-//           r % 2 !== 0
-//         ? a.mul(ell).add(arr)
-//         : a.mul(arr).add(ell)
-//       )
-//     } else {
-//       const f = muk(raku[r - j], 2, arr)
-//
-//       const tmp =
-//           j % 2 !== 0
-//         ? ell.add(f).mod(a)
-//         : ell.add(f).mod(b)
-//
-//       return loop(j - 1, arr, tmp)
-//     }
-//   }
-//
-//   const L = m.mod(a)
-//   const R = m.div(a)
-//
-//   return loop(r, L, R)
-// }
-
-// const fe = (r, a, b, m) => {
-//   const loop = (j, ell, arr) => {
-//     console.log(`${ell.toString()} ${arr.toString()}`)
-//     if (j === 0) {
-//       return (
-//           r % 2 !== 0
-//         ? a.mul(ell).add(arr)
-//         : a.mul(arr).add(ell)
-//       )
-//     } else {
-//       const f = muk(raku[r - j], 2, arr)
-//
-//       const tmp =
-//           j % 2 !== 0
-//         ? ell.add(f).mod(b)
-//         : ell.add(f).mod(a)
-//
-//       return loop(j - 1, arr, tmp)
-//     }
-//   }
-//
-//   const L = m.mod(a)
-//   const R = m.div(a)
-//
-//   return loop(r, L, R)
-// }
-
-// NB (jtobin): test me exhaustively
-const fe = (r, a, b, m) => {
+const fe = (r, a, b, f, m) => {
   const loop = (j, ell, arr) => {
     if (j > r) {
       return (
@@ -201,12 +147,12 @@ const fe = (r, a, b, m) => {
         : a.mul(arr).add(ell)
       )
     } else {
-      const f = muk(raku[r - j], 2, arr)
+      const eff = f(r - j, arr)
 
       const tmp =
           j % 2 !== 0
-        ? ell.add(f).mod(a)
-        : ell.add(f).mod(b)
+        ? ell.add(eff).mod(a)
+        : ell.add(eff).mod(b)
 
       return loop(j + 1, arr, tmp)
     }
@@ -218,8 +164,19 @@ const fe = (r, a, b, m) => {
   return loop(1, L, R)
 }
 
+const F = (j, arr) => {
+  const raku = [
+    0xb76d5eed,
+    0xee281300,
+    0x85bcae01,
+    0x4b387af7,
+  ]
+
+  return muk(raku[j], 2, arr)
+}
+
 const feis = arg =>
-  Fe(4, u_65535, u_65536, ux_ffff_ffff, new BN(arg))
+  Fe(4, u_65535, u_65536, ux_ffff_ffff, F, new BN(arg))
 
 const fein = (arg) => {
   const loop = (pyn) => {

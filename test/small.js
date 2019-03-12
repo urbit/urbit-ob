@@ -1,10 +1,11 @@
 const BN = require('bn.js')
+const { expect } = require('chai')
 
-const u_a = new BN(3)
-const u_b = new BN(4)
-const u_c = new BN(12)
+const { Fe } = require('../src/internal/ob')
 
-const emm = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+const u_a = new BN(Math.pow(2, 2) - 1)
+const u_b = new BN(Math.pow(2, 2))
+const u_c = u_a.mul(u_b)
 
 const eff = (j, m) => {
   let v0 = [5, 9, 2, 6, 4, 0, 8, 7, 1, 10, 3, 11]
@@ -23,49 +24,25 @@ const eff = (j, m) => {
   )
 }
 
-// NOTE this appears to be a correct implementation
-const fe = (r, a, b, m) => {
-  const loop = (j, ell, arr) => {
-    if (j > r) {
-      return (
-          r % 2 !== 0
-        ? a.mul(ell).add(arr)
-        : a.mul(arr).add(ell)
-      )
-    } else {
-      const f = eff(4 - j - 1, arr)
-
-      const tmp =
-          j % 2 !== 0
-        ? ell.add(f).mod(a)
-        : ell.add(f).mod(b)
-
-      return loop(j + 1, arr, tmp)
-    }
-  }
-
-  const L = m.mod(a)
-  const R = m.div(a)
-
-  return loop(1, L, R)
-}
-
-const Fe = (r, a, b, k, m) => {
-  const c = fe(r, a, b, m)
-  return (
-      c.lt(k)
-    ? c
-    : fe(r, a, b, c)
-  )
-}
-
 const feis = arg =>
-  Fe(4, u_a, u_b, u_c, new BN(arg))
+  Fe(4, u_a, u_b, u_c, eff, new BN(arg))
 
-module.exports = {
-  eff,
-  emm,
-  fe,
-  Fe,
-  feis
-}
+// test
+
+describe('feis -- small input space', () => {
+
+  const emm = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  const perm = emm.map(x => feis(x).toString())
+  const distincts = perm.filter((x, i, a) => a.indexOf(x) === i)
+
+  it('produces distinct outputs', () => {
+    expect(distincts.length).to.equal(perm.length)
+  })
+
+  it('permutes the input space', () => {
+    expect(perm.reduce((acc, x) => emm.includes(parseInt(x)) && acc, true))
+    .to.equal(true)
+  })
+
+})
+
