@@ -6,12 +6,18 @@ const {
   patp2hex,
   hex2patp,
   patp2dec,
+  vatp,
+  vatp2hex,
+  hex2vatp,
+  vatp2dec,
   patq,
   patq2hex,
   hex2patq,
   patq2dec,
   clan,
   sein,
+  clen,
+  sign,
   eqPatq,
   isValidPatq,
   isValidPatp
@@ -22,12 +28,17 @@ const patps = jsc.uint32.smap(
   pp => parseInt(patp2dec(pp))
 )
 
+const vatps = jsc.uint32.smap(
+  num => vatp(num),
+  pp => parseInt(vatp2dec(pp))
+)
+
 const patqs = jsc.uint32.smap(
   num => patq(num),
   pq => parseInt(patq2dec(pq))
 )
 
-describe('patp, etc.', () => {
+describe('patp, vatp, etc.', () => {
   it('patp2dec matches expected reference values', () => {
     expect(patp2dec('~zod')).to.equal('0')
     expect(patp2dec('~lex')).to.equal('200')
@@ -75,6 +86,19 @@ describe('patp, etc.', () => {
     jsc.assert(iso1)
   })
 
+  it('vatp and vatp2dec are inverses', () => {
+    let iso0 = jsc.forall(jsc.uint32, num =>
+      parseInt(vatp2dec(vatp(num))) === num
+    )
+
+    let iso1 = jsc.forall(vatps, vp =>
+      vatp(vatp2dec(vp)) === vp
+    )
+
+    jsc.assert(iso0, { tests: 10000 })
+    jsc.assert(iso1, { tests: 10000 })
+  })
+
   it('patp2hex and hex2patp are inverses', () => {
     let iso0 = jsc.forall(jsc.uint32, num =>
       parseInt(patp2hex(hex2patp(num.toString(16))), 16) === num
@@ -82,6 +106,19 @@ describe('patp, etc.', () => {
 
     let iso1 = jsc.forall(patps, pp =>
       hex2patp(patp2hex(pp)) === pp
+    )
+
+    jsc.assert(iso0)
+    jsc.assert(iso1)
+  })
+
+  it('vatp2hex and hex2vatp are inverses', () => {
+    let iso0 = jsc.forall(jsc.uint32, num =>
+      parseInt(vatp2hex(hex2vatp(num.toString(16))), 16) === num
+    )
+
+    let iso1 = jsc.forall(vatps, vp =>
+      hex2vatp(vatp2hex(vp)) === vp
     )
 
     jsc.assert(iso0)
