@@ -46,12 +46,6 @@ describe('patp, etc.', () => {
     expect(patp('15663360')).to.equal('~nidsut-tomdun')
   })
 
-  it('patp does not produce collisions', () => {
-    const lil = patp('479733505')
-    const big = patp('3108299008')
-    expect(lil).to.not.equal(big)
-  })
-
   it('large patp values match expected reference values', () => {
     expect(hex2patp('7468697320697320736f6d6520766572792068696768207175616c69747920656e74726f7079'))
     .to.equal('~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud')
