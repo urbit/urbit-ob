@@ -1,7 +1,8 @@
 const BN = require('bn.js')
 const { expect } = require('chai')
+const { isEqual } = require('lodash')
 
-const { Fe } = require('../src/internal/ob')
+const { Fe, Fen } = require('../src/internal/ob')
 
 const u_a = new BN(Math.pow(2, 2) - 1)
 const u_b = new BN(Math.pow(2, 2))
@@ -27,21 +28,29 @@ const eff = (j, m) => {
 const feis = arg =>
   Fe(4, u_a, u_b, u_c, eff, new BN(arg))
 
+const tail = arg =>
+  Fen(4, u_a, u_b, u_c, eff, new BN(arg))
+
 // test
 
-describe('feis -- small input space', () => {
+describe('feis/tail (small input space)', () => {
 
   const emm = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-  const perm = emm.map(x => feis(x).toString())
+  const perm = emm.map(x => feis(x).toNumber())
+  const inv  = perm.map(x => tail(x).toNumber())
   const distincts = perm.filter((x, i, a) => a.indexOf(x) === i)
 
-  it('produces distinct outputs', () => {
+  it('feis produces distinct outputs', () => {
     expect(distincts.length).to.equal(perm.length)
   })
 
-  it('permutes the input space', () => {
-    expect(perm.reduce((acc, x) => emm.includes(parseInt(x)) && acc, true))
+  it('feis permutes the input space', () => {
+    expect(perm.reduce((acc, x) => emm.includes(x) && acc, true))
     .to.equal(true)
+  })
+
+  it('tail inverts feis', () => {
+    expect(isEqual(emm, inv)).to.equal(true)
   })
 
 })
