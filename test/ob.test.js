@@ -65,20 +65,20 @@ describe('fein/fynd', () => {
 
   it('fein matches expected reference values', () => {
     let input = new BN('123456789')
-    let output = new BN('4133907371')
+    let output = new BN('1897766331')
     expect(fein(input).eq(output)).to.equal(true)
 
     input = new BN('15663360')
-    output = new BN('3867563781')
+    output = new BN('1208402137')
     expect(fein(input).eq(output)).to.equal(true)
   })
 
   it('fynd matches expected reference values', () => {
-    let input = new BN('4133907371')
+    let input = new BN('1897766331')
     let output = new BN('123456789')
     expect(fynd(input).eq(output)).to.equal(true)
 
-    input = new BN('3867563781')
+    input = new BN('1208402137')
     output = new BN('15663360')
     expect(fynd(input).eq(output)).to.equal(true)
   })
@@ -124,20 +124,20 @@ describe('feis/tail', () => {
 
   it('feis matches expected reference values', () => {
     let input = new BN ('123456789')
-    let output = new BN('4076532648')
+    let output = new BN('2060458291')
     expect(feis(input).eq(output)).to.equal(true)
 
     input = new BN('15663360')
-    output = new BN('2239503936')
+    output = new BN('1195593620')
     expect(feis(input).eq(output)).to.equal(true)
   })
 
   it('tail matches expected reference values', () => {
-    let input = new BN('4076532648')
+    let input = new BN('2060458291')
     let output = new BN ('123456789')
     expect(tail(input).eq(output)).to.equal(true)
 
-    input = new BN('2239503936')
+    input = new BN('1195593620')
     output = new BN('15663360')
     expect(tail(input).eq(output)).to.equal(true)
   })

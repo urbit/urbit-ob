@@ -14,14 +14,6 @@ const ux_ffff_ffff_0000_0000 = new BN('ffffffff00000000', 'hex')
 const u_65535 = new BN('65535')
 const u_65536 = new BN('65536')
 
-// PRF seeds
-const rako = [
-  0x4b387af7,
-  0x85bcae01,
-  0xee281300,
-  0xb76d5eed,
-]
-
 // old PRF seeds
 const raku = [
   0xb76d5eed,
@@ -32,7 +24,7 @@ const raku = [
 
 // a PRF for j in { 0, .., 3 }
 const F = (j, arg) =>
-  muk(rako[j], 2, arg)
+  muk(raku[j], 2, arg)
 
 /**
  * Conceal structure v3.
@@ -312,7 +304,6 @@ module.exports = {
 
   F,
   raku,
-  rako,
 
   fe,
   Fe,
