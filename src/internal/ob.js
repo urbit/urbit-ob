@@ -123,6 +123,9 @@ const fend = (arg) => {
  *
  * See: Black and Rogaway (2002), "Ciphers with arbitrary finite domains."
  *
+ * Note that this has been adjusted from the reference paper in order to
+ * support some legacy behaviour.
+ *
  * @param  {String, Number, BN}
  * @return  {BN}
  */
@@ -143,8 +146,10 @@ const fe = (r, a, b, f, m) => {
     if (j > r) {
       return (
           r % 2 !== 0
-        ? a.mul(ell).add(arr)
-        : a.mul(arr).add(ell)
+        ? a.mul(arr).add(ell)
+        : arr.eq(a)
+        ? a.mul(arr).add(ell)
+        : a.mul(ell).add(arr)
       )
     } else {
       const eff = f(j - 1, arr)
@@ -186,6 +191,11 @@ const fice = (arg) => {
 /**
  * Reverse 'feis'.
  *
+ * See: Black and Rogaway (2002), "Ciphers with arbitrary finite domains."
+ *
+ * Note that this has been adjusted from the reference paper in order to
+ * support some legacy behaviour.
+ *
  * @param {Number, String, BN}  arg
  * @return  {BN}
  */
@@ -223,15 +233,25 @@ const fen = (r, a, b, f, m) => {
     }
   }
 
-  const R =
+  const ahh =
+      r % 2 !== 0
+    ? m.div(a)
+    : m.mod(a)
+
+  const ale =
       r % 2 !== 0
     ? m.mod(a)
     : m.div(a)
 
   const L =
-      r % 2 !== 0
-    ? m.div(a)
-    : m.mod(a)
+      ale.eq(a)
+    ? ahh
+    : ale
+
+  const R =
+      ale.eq(a)
+    ? ale
+    : ahh
 
   return loop(r, L, R)
 }
