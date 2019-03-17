@@ -6,18 +6,12 @@ const {
   patp2hex,
   hex2patp,
   patp2dec,
-  vatp,
-  vatp2hex,
-  hex2vatp,
-  vatp2dec,
   patq,
   patq2hex,
   hex2patq,
   patq2dec,
   clan,
   sein,
-  clen,
-  sign,
   eqPatq,
   isValidPatq,
   isValidPatp
@@ -28,17 +22,12 @@ const patps = jsc.uint32.smap(
   pp => parseInt(patp2dec(pp))
 )
 
-const vatps = jsc.uint32.smap(
-  num => vatp(num),
-  pp => parseInt(vatp2dec(pp))
-)
-
 const patqs = jsc.uint32.smap(
   num => patq(num),
   pq => parseInt(patq2dec(pq))
 )
 
-describe('patp, vatp, etc.', () => {
+describe('patp, etc.', () => {
   it('patp2dec matches expected reference values', () => {
     expect(patp2dec('~zod')).to.equal('0')
     expect(patp2dec('~lex')).to.equal('200')
@@ -46,6 +35,8 @@ describe('patp, vatp, etc.', () => {
     expect(patp2dec('~samzod')).to.equal('1024')
     expect(patp2dec('~poldec-tonteg')).to.equal('9896704')
     expect(patp2dec('~nidsut-tomdun')).to.equal('15663360')
+    expect(patp2dec('~morlyd-mogmev')).to.equal('3108299008')
+    expect(patp2dec('~fipfes-morlyd')).to.equal('479733505')
   })
 
   it('patp matches expected reference values', () => {
@@ -55,6 +46,8 @@ describe('patp, vatp, etc.', () => {
     expect(patp('1024')).to.equal('~samzod')
     expect(patp('9896704')).to.equal('~poldec-tonteg')
     expect(patp('15663360')).to.equal('~nidsut-tomdun')
+    expect(patp('3108299008')).to.equal('~morlyd-mogmev')
+    expect(patp('479733505')).to.equal('~fipfes-morlyd')
   })
 
   it('large patp values match expected reference values', () => {
@@ -86,19 +79,6 @@ describe('patp, vatp, etc.', () => {
     jsc.assert(iso1)
   })
 
-  it('vatp and vatp2dec are inverses', () => {
-    let iso0 = jsc.forall(jsc.uint32, num =>
-      parseInt(vatp2dec(vatp(num))) === num
-    )
-
-    let iso1 = jsc.forall(vatps, vp =>
-      vatp(vatp2dec(vp)) === vp
-    )
-
-    jsc.assert(iso0, { tests: 10000 })
-    jsc.assert(iso1, { tests: 10000 })
-  })
-
   it('patp2hex and hex2patp are inverses', () => {
     let iso0 = jsc.forall(jsc.uint32, num =>
       parseInt(patp2hex(hex2patp(num.toString(16))), 16) === num
@@ -112,18 +92,6 @@ describe('patp, vatp, etc.', () => {
     jsc.assert(iso1)
   })
 
-  it('vatp2hex and hex2vatp are inverses', () => {
-    let iso0 = jsc.forall(jsc.uint32, num =>
-      parseInt(vatp2hex(hex2vatp(num.toString(16))), 16) === num
-    )
-
-    let iso1 = jsc.forall(vatps, vp =>
-      hex2vatp(vatp2hex(vp)) === vp
-    )
-
-    jsc.assert(iso0)
-    jsc.assert(iso1)
-  })
 })
 
 describe('patq, etc.', () => {
