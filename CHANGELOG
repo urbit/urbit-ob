@@ -1,5 +1,8 @@
 # Changelog
 
+- 4.0.0 (2019-03-18)
+    * Fixes the @p collision bug described in urbit/arvo#1105.
+
 - 3.2.0 (2019-02-08)
     * Improvements to error reporting.  E.g., instead of 'clan("~nidso")'
       throwing an error labelled 'patp2hex', it will now throw one labelled
