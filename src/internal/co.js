@@ -79,44 +79,6 @@ const end = (a, b, c) =>
   c.mod(bex(bex(a).mul(b)))
 
 /**
- * Convert a number to a @p-encoded string.
- *
- * @param  {String, Number, BN}  arg
- * @return  {String}
- */
-const patp = (arg) => {
-  const n = new BN(arg)
-
-  const sxz = ob.feen(n)
-  const dyy = met(four, sxz)
-
-  const loop = (tsxz, timp, trep) => {
-    const log = end(four, one, tsxz)
-    const pre = prefixes[rsh(three, one, log)]
-    const suf = suffixes[end(three, one, log)]
-    const etc =
-      (timp.mod(four)).eq(zero)
-        ? timp.eq(zero)
-          ? ''
-          : '--'
-        : '-'
-
-    const res = pre + suf + etc + trep
-
-    return timp.eq(dyy)
-      ? trep
-      : loop(rsh(four, one, tsxz), timp.add(one), res)
-  }
-
-  const dyx = met(three, sxz)
-
-  return '~' +
-    (dyx.lte(one)
-    ? suffixes[sxz]
-    : loop(sxz, zero, ''))
-}
-
-/**
  * Convert a hex-encoded string to a @p-encoded string.
  *
  * @param  {String}  hex
@@ -124,15 +86,6 @@ const patp = (arg) => {
  */
 const hex2patp = (hex) =>
   patp(new BN(hex, 'hex'))
-
-/**
- * Convert a hex-encoded string to a @p-encoded string.
- *
- * @param  {String}  hex
- * @return  {String}
- */
-const hex2vatp = (hex) =>
-  vatp(new BN(hex, 'hex'))
 
 /**
  * Convert a Buffer to a @p-encoded string.
@@ -144,49 +97,12 @@ const buf2patp = (buf) =>
   hex2patp(buf.toString('hex'))
 
 /**
- * Convert a Buffer to a @p-encoded string.
- *
- * @param  {Buffer}  buf
- * @return  {String}
- */
-const buf2vatp = (buf) =>
-  hex2vatp(buf.toString('hex'))
-
-/**
  * Convert a @p-encoded string to a hex-encoded string.
  *
  * @param  {String}  name @p
  * @return  {String}
  */
 const patp2hex = (name) => {
-  if (isValidPat(name) === false) {
-    throw new Error('patp2hex: not a valid @p')
-  }
-  const syls = patp2syls(name)
-
-  const syl2bin = idx =>
-    idx.toString(2).padStart(8, '0')
-
-  const addr = lodash.reduce(syls, (acc, syl, idx) =>
-    idx % 2 !== 0 || syls.length === 1
-      ? acc + syl2bin(suffixes.indexOf(syl))
-      : acc + syl2bin(prefixes.indexOf(syl)),
-  '')
-
-  const bn = new BN(addr, 2)
-  const hex = ob.fend(bn).toString('hex')
-  return hex.length % 2 !== 0
-    ? hex.padStart(hex.length + 1, '0')
-    : hex
-}
-
-/**
- * Convert a @p-encoded string to a hex-encoded string.
- *
- * @param  {String}  name @p
- * @return  {String}
- */
-const vatp2hex = (name) => {
   if (isValidPat(name) === false) {
     throw new Error('patp2hex: not a valid @p')
   }
@@ -218,15 +134,6 @@ const patp2buf = name =>
   Buffer.from(patp2hex(name), 'hex')
 
 /**
- * Convert a @p-encoded string to a Buffer.
- *
- * @param  {String}  name
- * @return  {Buffer}
- */
-const vatp2buf = name =>
-  Buffer.from(vatp2hex(name), 'hex')
-
-/**
  * Convert a @p-encoded string to a bignum.
  *
  * @param  {String}  name @p
@@ -234,15 +141,6 @@ const vatp2buf = name =>
  */
 const patp2bn = name =>
   new BN(patp2hex(name), 'hex')
-
-/**
- * Convert a @p-encoded string to a bignum.
- *
- * @param  {String}  name @p
- * @return  {BN}
- */
-const vatp2bn = name =>
-  new BN(vatp2hex(name), 'hex')
 
 /**
  * Convert a @p-encoded string to a decimal-encoded string.
@@ -254,22 +152,6 @@ const patp2dec = name => {
   let bn
   try {
     bn = patp2bn(name)
-  } catch(_) {
-    throw new Error('patp2dec: not a valid @p')
-  }
-  return bn.toString()
-}
-
-/**
- * Convert a @p-encoded string to a decimal-encoded string.
- *
- * @param  {String}  name @p
- * @return  {String}
- */
-const vatp2dec = name => {
-  let bn
-  try {
-    bn = vatp2bn(name)
   } catch(_) {
     throw new Error('patp2dec: not a valid @p')
   }
@@ -429,32 +311,6 @@ const clan = who => {
 }
 
 /**
- * Determine the ship class of a @p value.
- *
- * @param  {String}  @p
- * @return  {String}
- */
-const clen = who => {
-  let name
-  try {
-    name = vatp2bn(who)
-  } catch(_) {
-    throw new Error('clan: not a valid @p')
-  }
-
-  const wid = met(three, name)
-  return wid.lte(one)
-    ? 'galaxy'
-    : wid.eq(two)
-    ? 'star'
-    : wid.lte(four)
-    ? 'planet'
-    : wid.lte(new BN(8))
-    ? 'moon'
-    : 'comet'
-}
-
-/**
  * Determine the parent of a @p value.
  *
  * @param  {String}  @p
@@ -486,40 +342,6 @@ const sein = name => {
     ? end(five, one, who)
     : zero
   return patp(res)
-}
-
-/**
- * Determine the parent of a @p value.
- *
- * @param  {String}  @p
- * @return  {String}
- */
-const sign = name => {
-  let who
-  try {
-    who = vatp2bn(name)
-  } catch(_) {
-    throw new Error('sein: not a valid @p')
-  }
-
-  let mir
-  try {
-    mir = clen(name)
-  } catch(_) {
-    throw new Error('sein: not a valid @p')
-  }
-
-  const res =
-    mir === 'galaxy'
-    ? who
-    : mir === 'star'
-    ? end(three, one, who)
-    : mir === 'planet'
-    ? end(four, one, who)
-    : mir === 'moon'
-    ? end(five, one, who)
-    : zero
-  return vatp(res)
 }
 
 /**
@@ -601,7 +423,13 @@ const eqPatq = (p, q) => {
   return eqModLeadingZeroBytes(phex, qhex)
 }
 
-const vatp = (arg) => {
+/**
+ * Convert a number to a @p-encoded string.
+ *
+ * @param  {String, Number, BN}  arg
+ * @return  {String}
+ */
+const patp = (arg) => {
   const n = new BN(arg)
 
   const sxz = ob.fein(n)
@@ -638,20 +466,15 @@ module.exports = {
   patp2hex,
   hex2patp,
   patp2dec,
+  sein,
+  clan,
+
   patq,
   patq2hex,
   hex2patq,
   patq2dec,
-  clan,
-  sein,
-  eqPatq,
-  isValidPatq: isValidPat, // reserving for diff impls in future
-  isValidPatp: isValidPat,
 
-  vatp,
-  vatp2hex,
-  hex2vatp,
-  vatp2dec,
-  sign,
-  clen
+  eqPatq,
+  isValidPatp: isValidPat, // reserving for diff impls in future
+  isValidPatq: isValidPat
 }
