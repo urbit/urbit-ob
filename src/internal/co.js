@@ -79,44 +79,6 @@ const end = (a, b, c) =>
   c.mod(bex(bex(a).mul(b)))
 
 /**
- * Convert a number to a @p-encoded string.
- *
- * @param  {String, Number, BN}  arg
- * @return  {String}
- */
-const patp = (arg) => {
-  const n = new BN(arg)
-
-  const sxz = ob.feen(n)
-  const dyy = met(four, sxz)
-
-  const loop = (tsxz, timp, trep) => {
-    const log = end(four, one, tsxz)
-    const pre = prefixes[rsh(three, one, log)]
-    const suf = suffixes[end(three, one, log)]
-    const etc =
-      (timp.mod(four)).eq(zero)
-        ? timp.eq(zero)
-          ? ''
-          : '--'
-        : '-'
-
-    const res = pre + suf + etc + trep
-
-    return timp.eq(dyy)
-      ? trep
-      : loop(rsh(four, one, tsxz), timp.add(one), res)
-  }
-
-  const dyx = met(three, sxz)
-
-  return '~' +
-    (dyx.lte(one)
-    ? suffixes[sxz]
-    : loop(sxz, zero, ''))
-}
-
-/**
  * Convert a hex-encoded string to a @p-encoded string.
  *
  * @param  {String}  hex
@@ -156,7 +118,7 @@ const patp2hex = (name) => {
   '')
 
   const bn = new BN(addr, 2)
-  const hex = ob.fend(bn).toString('hex')
+  const hex = ob.fynd(bn).toString('hex')
   return hex.length % 2 !== 0
     ? hex.padStart(hex.length + 1, '0')
     : hex
@@ -461,18 +423,58 @@ const eqPatq = (p, q) => {
   return eqModLeadingZeroBytes(phex, qhex)
 }
 
+/**
+ * Convert a number to a @p-encoded string.
+ *
+ * @param  {String, Number, BN}  arg
+ * @return  {String}
+ */
+const patp = (arg) => {
+  const n = new BN(arg)
+
+  const sxz = ob.fein(n)
+  const dyy = met(four, sxz)
+
+  const loop = (tsxz, timp, trep) => {
+    const log = end(four, one, tsxz)
+    const pre = prefixes[rsh(three, one, log)]
+    const suf = suffixes[end(three, one, log)]
+    const etc =
+      (timp.mod(four)).eq(zero)
+        ? timp.eq(zero)
+          ? ''
+          : '--'
+        : '-'
+
+    const res = pre + suf + etc + trep
+
+    return timp.eq(dyy)
+      ? trep
+      : loop(rsh(four, one, tsxz), timp.add(one), res)
+  }
+
+  const dyx = met(three, sxz)
+
+  return '~' +
+    (dyx.lte(one)
+    ? suffixes[sxz]
+    : loop(sxz, zero, ''))
+}
+
 module.exports = {
   patp,
   patp2hex,
   hex2patp,
   patp2dec,
+  sein,
+  clan,
+
   patq,
   patq2hex,
   hex2patq,
   patq2dec,
-  clan,
-  sein,
+
   eqPatq,
-  isValidPatq: isValidPat, // reserving for diff impls in future
-  isValidPatp: isValidPat
+  isValidPatp: isValidPat, // reserving for diff impls in future
+  isValidPatq: isValidPat
 }

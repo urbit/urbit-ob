@@ -35,6 +35,8 @@ describe('patp, etc.', () => {
     expect(patp2dec('~samzod')).to.equal('1024')
     expect(patp2dec('~poldec-tonteg')).to.equal('9896704')
     expect(patp2dec('~nidsut-tomdun')).to.equal('15663360')
+    expect(patp2dec('~morlyd-mogmev')).to.equal('3108299008')
+    expect(patp2dec('~fipfes-morlyd')).to.equal('479733505')
   })
 
   it('patp matches expected reference values', () => {
@@ -44,6 +46,8 @@ describe('patp, etc.', () => {
     expect(patp('1024')).to.equal('~samzod')
     expect(patp('9896704')).to.equal('~poldec-tonteg')
     expect(patp('15663360')).to.equal('~nidsut-tomdun')
+    expect(patp('3108299008')).to.equal('~morlyd-mogmev')
+    expect(patp('479733505')).to.equal('~fipfes-morlyd')
   })
 
   it('large patp values match expected reference values', () => {
@@ -87,6 +91,7 @@ describe('patp, etc.', () => {
     jsc.assert(iso0)
     jsc.assert(iso1)
   })
+
 })
 
 describe('patq, etc.', () => {
