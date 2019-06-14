@@ -53,7 +53,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 `
 
 const patp2syls = name =>
-  name.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+  (name.replace(/[\^~-]/g,'').match(/.{1,3}/g) || [])
 
 const splitAt = (index, str) => [str.slice(0, index), str.slice(index)]
 
