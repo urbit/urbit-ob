@@ -364,7 +364,7 @@ const isValidPat = name => {
 
   const leadingTilde = name.slice(0, 1) === '~'
 
-  if (leadingTilde === false || name.length < 3) {
+  if (leadingTilde === false || name.length < 4) {
     return false
   } else {
     const syls = patp2syls(name)
