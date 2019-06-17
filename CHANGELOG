@@ -1,5 +1,9 @@
 # Changelog
 
+- 4.0.1 (2019-06-17)
+    * Fixes a bug in isValidPat{p, q} that caused it to return 'true' for '~'.
+      (#23)
+
 - 4.0.0 (2019-03-18)
     * Fixes the @p collision bug described in urbit/arvo#1105.
 
