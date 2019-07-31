@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const { expect } = require('chai');
-const isEqual = require('lodash.isEqual')
+const isEqual = require('lodash.isequal')
 const { muk } = require('../src/internal/muk')
 
 describe('muk', () => {

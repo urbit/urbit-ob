@@ -1,7 +1,7 @@
 const BN = require('bn.js')
 const { expect } = require('chai');
 const jsc = require('jsverify')
-const isEqual = require('lodash.isEqual')
+const isEqual = require('lodash.isequal')
 const {
   fein,
   fynd,
