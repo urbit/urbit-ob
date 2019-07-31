@@ -3,7 +3,8 @@
 // See arvo/sys/hoon.hoon.
 
 const BN = require('bn.js')
-const lodash = require('lodash')
+const chunk = require('lodash.chunk')
+const isEqual = require('lodash.isEqual')
 
 const ob = require('./ob')
 
@@ -112,7 +113,7 @@ const patp2hex = (name) => {
   const syl2bin = idx =>
     idx.toString(2).padStart(8, '0')
 
-  const addr = lodash.reduce(syls, (acc, syl, idx) =>
+  const addr = syls.reduce((acc, syl, idx) =>
     idx % 2 !== 0 || syls.length === 1
       ? acc + syl2bin(suffixes.indexOf(syl))
       : acc + syl2bin(prefixes.indexOf(syl)),
@@ -180,16 +181,16 @@ const patq = (arg) => {
 const buf2patq = buf => {
   const chunked =
     buf.length % 2 !== 0 && buf.length > 1
-    ? lodash.concat([[buf[0]]], lodash.chunk(buf.slice(1), 2))
-    : lodash.chunk(buf, 2)
+    ? [[buf[0]]].concat(chunk(buf.slice(1), 2))
+    : chunk(buf, 2)
 
   const prefixName = byts =>
-    lodash.isUndefined(byts[1])
+    byts[1] === undefined
     ? prefixes[0] + suffixes[byts[0]]
     : prefixes[byts[0]] + suffixes[byts[1]]
 
   const name = byts =>
-    lodash.isUndefined(byts[1])
+    byts[1] === undefined
     ? suffixes[byts[0]]
     : prefixes[byts[0]] + suffixes[byts[1]]
 
@@ -232,11 +233,11 @@ const patq2hex = name => {
   if (isValidPat(name) === false) {
     throw new Error('patq2hex: not a valid @q')
   }
-  const chunks = lodash.split(name.slice(1), '-')
+  const chunks = name.slice(1).split('-')
   const dec2hex = dec =>
     dec.toString(16).padStart(2, '0')
 
-  const splat = lodash.map(chunks, chunk => {
+  const splat = chunks.map(chunk => {
     let syls = splitAt(3, chunk)
     return syls[1] === ''
       ? dec2hex(suffixes.indexOf(syls[0]))
@@ -369,7 +370,7 @@ const isValidPat = name => {
   } else {
     const syls = patp2syls(name)
     const wrongLength = syls.length % 2 !== 0 && syls.length !== 1
-    const sylsExist = lodash.reduce(syls, (acc, syl, index) =>
+    const sylsExist = syls.reduce((acc, syl, index) =>
       acc &&
         (index % 2 !== 0 || syls.length === 1
           ? suffixes.includes(syl)
@@ -397,7 +398,7 @@ const removeLeadingZeroBytes = str =>
  * @return  {Bool}
  */
 const eqModLeadingZeroBytes = (s, t) =>
-  lodash.isEqual(removeLeadingZeroBytes(s), removeLeadingZeroBytes(t))
+  isEqual(removeLeadingZeroBytes(s), removeLeadingZeroBytes(t))
 
 /**
  * Equality comparison on @q values.

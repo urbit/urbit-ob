@@ -1,7 +1,7 @@
 const BN = require('bn.js')
 const { expect } = require('chai');
 const jsc = require('jsverify')
-const { isEqual } = require('lodash')
+const isEqual = require('lodash.isEqual')
 const {
   fein,
   fynd,
@@ -82,4 +82,3 @@ describe('feis/tail', () => {
     expect(tail(input).eq(output)).to.equal(true)
   })
 })
-
