@@ -4,7 +4,7 @@
 
 const BN = require('bn.js')
 const chunk = require('lodash.chunk')
-const isEqual = require('lodash.isEqual')
+const isEqual = require('lodash.isequal')
 
 const ob = require('./ob')
 
