@@ -1,8 +1,8 @@
 {
   "name": "urbit-ob",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Utilities for Hoon-style atom printing and conversion",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "nyc mocha --reporter spec"
   },
