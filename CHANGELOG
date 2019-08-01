@@ -1,6 +1,6 @@
 # Changelog
 
-- 4.0.2 (2019-06-17)
+- 4.0.2 (2019-08-01)
     * Removes most of lodash, adds gulp build automation for the browser.
 
 - 4.0.1 (2019-06-17)
