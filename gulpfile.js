@@ -32,17 +32,6 @@ var rootImport = require('rollup-plugin-root-import');
 
 // JS  /////////////////////////////////////////////////////////////////////////
 
-// transpiles JSX
-// gulp.task('jsx-transform', function(cb) {
-//   return gulp
-//     .src('src/**/*.js')
-//     .pipe(sucrase({
-//       // options: typescript, flow, jsx
-//       transforms: ['js']
-//     }))
-//     .pipe(gulp.dest('dist'));
-// });
-
 
 // resolves JS imports and file transformations not including transpiling JSX
 gulp.task('default', function(cb) {
@@ -51,11 +40,7 @@ gulp.task('default', function(cb) {
     .pipe(rollup({
       plugins: [
         // the order of these plugins matter
-        commonjs({
-          namedExports: {
-            // 'node_modules/react/index.js': [ 'Component, Fragment' ]
-          }
-        }),
+        commonjs(),
         replace({
           'process.env.NODE_ENV': JSON.stringify('development')
         }),
@@ -67,19 +52,6 @@ gulp.task('default', function(cb) {
         // json(),
         globals(),
         builtins(),
-        // babel({
-        //   babelrc: false,
-        //   extensions: ['js'],
-        //   plugins: [
-        //     ["@babel/plugin-proposal-object-rest-spread", { useBuiltIns: true }]
-        //   ],
-        //   exclude: [
-        //     "node_modules/**",
-        //     "docs/**",
-        //     "bin/**",
-        //     "assets/**",
-        //   ]
-        // }),
         resolve()
       ]
     }, 'cjs'))
