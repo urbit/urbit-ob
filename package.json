@@ -4,12 +4,10 @@
   "license": "MIT",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
-  "browser": {
-   "src/index.js": "dist/index.js"
-  },
+  "browser": "dist/index.js",
   "scripts": {
     "build": "gulp",
-    "test": "nyc mocha --reporter spec"
+    "test": "nyc mocha --repordter spec"
   },
   "repository": {
     "type": "git",
