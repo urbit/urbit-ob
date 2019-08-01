@@ -7,7 +7,7 @@
   "browser": "dist/index.js",
   "scripts": {
     "build": "gulp",
-    "test": "nyc mocha --repordter spec"
+    "test": "nyc mocha --reporter spec"
   },
   "repository": {
     "type": "git",
