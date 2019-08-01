@@ -85,3 +85,7 @@ true
 
 A simple `npm test` will run the test suite.
 
+
+## Building
+
+`npm run build` will build the library for the browser. 
