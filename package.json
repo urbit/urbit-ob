@@ -3,9 +3,9 @@
   "version": "4.0.2",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
-   "browser": {
-     "src/index.js": "dist/index.js"
-   },
+  "browser": {
+   "src/index.js": "dist/index.js"
+  },
   "scripts": {
     "build": "gulp",
     "test": "nyc mocha --reporter spec"
