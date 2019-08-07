@@ -66,9 +66,6 @@ const suffixes = suf.match(/.{1,3}/g)
 const bex = (n) =>
   two.pow(n)
 
-const lsh = (a, b, c) =>
-  bex(bex(a).mul(b)).mul(c)
-
 const rsh = (a, b, c) =>
   c.div(bex(bex(a).mul(b)))
 
@@ -88,15 +85,6 @@ const end = (a, b, c) =>
  */
 const hex2patp = (hex) =>
   patp(new BN(hex, 'hex'))
-
-/**
- * Convert a Buffer to a @p-encoded string.
- *
- * @param  {Buffer}  buf
- * @return  {String}
- */
-const buf2patp = (buf) =>
-  hex2patp(buf.toString('hex'))
 
 /**
  * Convert a @p-encoded string to a hex-encoded string.
@@ -125,15 +113,6 @@ const patp2hex = (name) => {
     ? hex.padStart(hex.length + 1, '0')
     : hex
 }
-
-/**
- * Convert a @p-encoded string to a Buffer.
- *
- * @param  {String}  name
- * @return  {Buffer}
- */
-const patp2buf = name =>
-  Buffer.from(patp2hex(name), 'hex')
 
 /**
  * Convert a @p-encoded string to a bignum.
@@ -258,17 +237,6 @@ const patq2hex = name => {
  */
 const patq2bn = name =>
   new BN(patq2hex(name), 'hex')
-
-/**
- * Convert a @q-encoded string to a Buffer.
- *
- * @param  {String}  name @q
- * @return  {Buffer}
- */
-const patq2buf = name => {
-  const hex = patq2hex(name)
-  return Buffer.from(hex, 'hex')
-}
 
 /**
  * Convert a @q-encoded string to a decimal-encoded string.
