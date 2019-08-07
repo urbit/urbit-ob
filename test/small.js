@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const { expect } = require('chai')
-const { isEqual } = require('lodash')
+const isEqual = require('lodash.isequal')
 
 const { Fe, Fen } = require('../src/internal/ob')
 
@@ -54,4 +54,3 @@ describe('feis/tail (small input space)', () => {
   })
 
 })
-

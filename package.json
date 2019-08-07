@@ -1,10 +1,15 @@
 {
   "name": "urbit-ob",
-  "version": "4.0.1",
+  "version": "4.0.2",
+  "license": "MIT",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
+  "browser": "dist/index.js",
   "scripts": {
-    "test": "nyc mocha --reporter spec"
+    "build": "mkdir -p dist && rollup -c rollup.config.js",
+    "test": "nyc mocha --reporter spec",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
@@ -14,15 +19,21 @@
     "urbit"
   ],
   "author": "Tlon",
-  "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
     "jsverify": "^0.8.3",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^14.1.1",
+    "eslint": "^5.16.0",
+    "rollup": "^1.17.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
     "bn.js": "^4.11.8",
-    "lodash": "^4.17.11"
+    "lodash.chunk": "^4.2.0",
+    "lodash.isequal": "^4.5.0"
   }
 }

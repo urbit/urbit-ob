@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const { expect } = require('chai');
-const { isEqual } = require('lodash')
+const isEqual = require('lodash.isequal')
 const { muk } = require('../src/internal/muk')
 
 describe('muk', () => {
@@ -18,4 +18,3 @@ describe('muk', () => {
     expect(muk(0, 2, input).eq(output)).to.equal(true)
   })
 })
-
