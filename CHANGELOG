@@ -1,7 +1,8 @@
 # Changelog
 
-- 4.0.2 (2019-08-01)
-    * Removes most of lodash and adds a browser build.
+- 4.1.0 (2019-08-07)
+    * Adds a browser build.  The library should now "just work" when imported
+      in a browser app, instead of requiring building downstream. (#24)
 
 - 4.0.1 (2019-06-17)
     * Fixes a bug in isValidPat{p, q} that caused it to return 'true' for '~'.
