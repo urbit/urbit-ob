@@ -1,5 +1,9 @@
 # Changelog
 
+- 4.1.2 (2019-09-05)
+    * Reverts change that likely caused the 'browser' specification in
+      package.json to break.
+
 - 4.1.1 (2019-08-07)
     * Reverts change that messed up the library's namespacing downstream.
 

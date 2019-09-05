@@ -1,6 +1,6 @@
 # urbit-ob
 
-[![Build Status](https://secure.travis-ci.org/urbit/ob-js.png)](http://travis-ci.org/urbit/ob-js)
+[![Build Status](https://secure.travis-ci.org/urbit/urbit-ob.png)](http://travis-ci.org/urbit/urbit-ob)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm](https://img.shields.io/npm/v/urbit-ob.svg)](https://www.npmjs.com/package/urbit-ob)
 
@@ -88,4 +88,4 @@ A simple `npm test` will run the test suite.
 
 ## Building
 
-`npm run build` will build the library for the browser. 
+`npm run build` will build the library for the browser.

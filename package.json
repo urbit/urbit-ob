@@ -1,11 +1,11 @@
 {
   "name": "urbit-ob",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "license": "MIT",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
   "browser": {
-   "src/index.js": "dist/index.js"
+    "src/index.js": "dist/index.js"
   },
   "scripts": {
     "build": "mkdir -p dist && rollup -c rollup.config.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/urbit/ob-js.git"
+    "url": "git+https://github.com/urbit/urbit-ob.git"
   },
   "keywords": [
     "urbit"
