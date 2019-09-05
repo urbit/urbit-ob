@@ -4,7 +4,9 @@
   "license": "MIT",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
-  "browser": "dist/index.js",
+  "browser": {
+   "src/index.js": "dist/index.js"
+  },
   "scripts": {
     "build": "mkdir -p dist && rollup -c rollup.config.js",
     "test": "nyc mocha --reporter spec",
