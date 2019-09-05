@@ -1,0 +1,6 @@
+rollup.config.js
+sandbox
+coverage
+.travis.yml
+.eslintrc.json
+.nyc_output
