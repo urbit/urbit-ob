@@ -89,3 +89,7 @@ A simple `npm test` will run the test suite.
 ## Building
 
 `npm run build` will build the library for the browser.
+
+## See Also
+
+* [urbit-hob](https://github.com/urbit/urbit-hob) -- Haskell bindings
