@@ -61,6 +61,8 @@ There are a few other noteworthy functions exposed as well:
 * `clan`, for determining the ship class of a `@p` value
 * `sein`, for determining the parent of a `@p` value
 * `eqPatq`, for comparing `@q` values for equality
+* `isValidPat`, for a faster/weaker check of `@p` or `@q`-ness that only
+  validates syllables (and not proper dash formatting)
 
 For example, you can check that `~marzod` is a star with parent `~zod`:
 
