@@ -350,6 +350,24 @@ const isValidPat = name => {
 }
 
 /**
+ * Validate a @p string.
+ *
+ * @param  {String}  str a string
+ * @return  {String}
+ */
+const isValidPatp = str =>
+  isValidPat(str) && str === patp(patp2dec(str))
+
+/**
+ * Validate a @q string.
+ *
+ * @param  {String}  str a string
+ * @return  {String}
+ */
+const isValidPatq = str =>
+  isValidPat(str) && eqPatq(str, patq(patq2dec(str)))
+
+/**
  * Remove all leading zero bytes from a sliceable value.
  * @param  {String, Buffer, Array}
  * @return  {String}
@@ -444,6 +462,7 @@ module.exports = {
   patq2dec,
 
   eqPatq,
-  isValidPatp: isValidPat, // reserving for diff impls in future
-  isValidPatq: isValidPat
+  isValidPat,
+  isValidPatp,
+  isValidPatq
 }
