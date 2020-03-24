@@ -22,6 +22,7 @@ describe('the public-facing API', () => {
     expect(ob.patq2dec(zod)).to.equal(zoddec)
 
     expect(ob.eqPatq(zod, zod)).to.equal(true)
+    expect(ob.isValidPat(zod)).to.equal(true)
     expect(ob.isValidPatp(zod)).to.equal(true)
     expect(ob.isValidPatq(zod)).to.equal(true)
   })
