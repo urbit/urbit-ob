@@ -1,5 +1,9 @@
 # Changelog
 
+- 5.0.1 (2020-06-26)
+    * Fixes a bug where some functions (namely, 'patp') could enter an
+      infinite loop when supplied with a null value.
+
 - 5.0.0 (2020-03-24)
     * The isValidPat{p, q} functions now perform stricter validations on their
       inputs.

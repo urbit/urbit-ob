@@ -1,6 +1,6 @@
 {
   "name": "urbit-ob",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "license": "MIT",
   "description": "Utilities for Hoon-style atom printing and conversion",
   "main": "src/index.js",
