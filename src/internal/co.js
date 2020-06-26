@@ -83,8 +83,12 @@ const end = (a, b, c) =>
  * @param  {String}  hex
  * @return  {String}
  */
-const hex2patp = (hex) =>
-  patp(new BN(hex, 'hex'))
+const hex2patp = (hex) => {
+  if (hex === null) {
+    throw new Error('hex2patp: null input')
+  }
+  return patp(new BN(hex, 'hex'))
+}
 
 /**
  * Convert a @p-encoded string to a hex-encoded string.
@@ -417,6 +421,9 @@ const eqPatq = (p, q) => {
  * @return  {String}
  */
 const patp = (arg) => {
+  if (arg === null) {
+    throw new Error('patp: null input')
+  }
   const n = new BN(arg)
 
   const sxz = ob.fein(n)
