@@ -55,6 +55,16 @@ describe('patp, etc.', () => {
     .to.equal('~divmes-davset-holdet--sallun-salpel-taswet-holtex--watmeb-tarlun-picdet-magmes--holter-dacruc-timdet-divtud--holwet-maldut-padpel-sivtud')
   })
 
+  it('patp throws on null input', () => {
+    let input = () => patp(null)
+    expect(input).to.throw()
+  })
+
+  it('hex2patp throws on null input', () => {
+    let input = () => hex2patp(null)
+    expect(input).to.throw()
+  })
+
   it('patp2hex throws on invalid patp', () => {
     let input = () => patp2hex('nidsut-tomdun')
     expect(input).to.throw()
@@ -63,6 +73,8 @@ describe('patp, etc.', () => {
     input = () => patp2hex('~sut-tomdun')
     expect(input).to.throw()
     input = () => patp2hex('~nidsut-dun')
+    expect(input).to.throw()
+    input = () => patp2hex(null)
     expect(input).to.throw()
   })
 
@@ -126,6 +138,8 @@ describe('patq, etc.', () => {
     expect(input).to.throw()
     input = () => patq2hex('~nidsut-dun')
     expect(input).to.throw()
+    input = () => patq2hex(null)
+    expect(input).to.throw()
   })
 
   it('patq and patq2dec are inverses', () => {
@@ -174,6 +188,8 @@ describe('clan/sein', () => {
     expect(input).to.throw()
     input = () => clan('~nid-tomdun')
     expect(input).to.throw()
+    input = () => clan(null)
+    expect(input).to.throw()
   })
 
   it('sein works as expected', () => {
@@ -193,6 +209,8 @@ describe('clan/sein', () => {
     input = () => sein('zod')
     expect(input).to.throw()
     input = () => sein('~nid-tomdun')
+    expect(input).to.throw()
+    input = () => sein(null)
     expect(input).to.throw()
   })
 
