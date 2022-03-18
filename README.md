@@ -95,3 +95,4 @@ A simple `npm test` will run the test suite.
 ## See Also
 
 * [urbit-hob](https://github.com/urbit/urbit-hob) -- Haskell bindings
+* [urbit-gob](https://github.com/deelawn/urbit-gob) -- Go bindings
