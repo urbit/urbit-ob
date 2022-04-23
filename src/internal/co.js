@@ -328,7 +328,7 @@ const sein = name => {
  * will not.
  *
  * @param  {String}  name a @p or @q value
- * @return  {String}
+ * @return  {boolean}
  */
 const isValidPat = name => {
   if (typeof name !== 'string') {
@@ -357,7 +357,7 @@ const isValidPat = name => {
  * Validate a @p string.
  *
  * @param  {String}  str a string
- * @return  {String}
+ * @return  {boolean}
  */
 const isValidPatp = str =>
   isValidPat(str) && str === patp(patp2dec(str))
@@ -366,7 +366,7 @@ const isValidPatp = str =>
  * Validate a @q string.
  *
  * @param  {String}  str a string
- * @return  {String}
+ * @return  {boolean}
  */
 const isValidPatq = str =>
   isValidPat(str) && eqPatq(str, patq(patq2dec(str)))
