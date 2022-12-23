@@ -97,3 +97,4 @@ A simple `npm test` will run the test suite.
 * [urbit-hob](https://github.com/urbit/urbit-hob) -- Haskell bindings
 * [urbit-gob](https://github.com/deelawn/urbit-gob) -- Go bindings
 * [clj-ob](https://github.com/pkova/clj-ob) -- Clojure bindings
+* [urbit-pob](https://github.com/evening/urbit-pob) -- Python bindings
