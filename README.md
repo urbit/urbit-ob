@@ -98,3 +98,4 @@ A simple `npm test` will run the test suite.
 * [urbit-gob](https://github.com/deelawn/urbit-gob) -- Go bindings
 * [clj-ob](https://github.com/pkova/clj-ob) -- Clojure bindings
 * [urbit-pob](https://github.com/evening/urbit-pob) -- Python bindings
+* [urbit-cob](https://github.com/midlyx-hatrys/urbit-cob) -- plain C(+GMP) version
